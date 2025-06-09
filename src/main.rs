@@ -2,6 +2,7 @@
 //!
 //! # Usage (3 of 4 Threshold)
 mod bindings;
+mod config;
 mod handlers;
 
 use ark_bn254::{Fr};
