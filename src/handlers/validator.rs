@@ -8,6 +8,7 @@ use NumberEncoder::yourNumbFuncCall;
 use std::{env, io::Cursor, str::FromStr};
 use crate::bindings::counter::Counter;
 use commonware_cryptography::sha256::Digest;
+use commonware_eigenlayer::config::AvsDeployment;
 
 sol! {
     contract NumberEncoder {
@@ -24,7 +25,9 @@ impl Validator {
         let http_rpc = env::var("HTTP_RPC").expect("HTTP_RPC must be set");
         let provider = ProviderBuilder::new()
             .on_http(url::Url::parse(&http_rpc).unwrap());
-        let counter_address = Address::from_str(&env::var("COUNTER_ADDRESS").expect("COUNTER_ADDRESS must be set"))?;
+        
+        let deployment = AvsDeployment::load()?;
+        let counter_address = deployment.counter_address()?;
         let counter = Counter::new(counter_address, provider.clone());
         
         Ok(Self {
