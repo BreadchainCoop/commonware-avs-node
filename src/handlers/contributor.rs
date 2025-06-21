@@ -1,14 +1,12 @@
 use crate::handlers::validator::Validator;
 use alloy::sol;
-use bn254::{
-    self, Bn254, PublicKey, Signature as Bn254Signature,
-};
+use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
+use bytes::Bytes;
+use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
-use bytes::Bytes;
-use commonware_codec::{EncodeSize, ReadExt, Write};
 use std::collections::{HashMap, HashSet};
 use tracing::info;
 
@@ -27,11 +25,7 @@ pub struct Contributor {
 }
 
 impl Contributor {
-    pub fn new(
-        orchestrator: PublicKey,
-        signer: Bn254,
-        mut contributors: Vec<PublicKey>,
-    ) -> Self {
+    pub fn new(orchestrator: PublicKey, signer: Bn254, mut contributors: Vec<PublicKey>) -> Self {
         dotenv().ok();
         contributors.sort();
         let mut ordered_contributors = HashMap::new();
@@ -79,7 +73,10 @@ impl Contributor {
             }
             let mut buf = Vec::with_capacity(message.encode_size());
             message.write(&mut buf);
-            let payload = validator.validate_and_return_expected_hash(&buf).await.unwrap();
+            let payload = validator
+                .validate_and_return_expected_hash(&buf)
+                .await
+                .unwrap();
             info!(
                 "Generating signature for round: {}, payload hash: {}",
                 round,
@@ -96,9 +93,11 @@ impl Contributor {
             // Return signature to orchestrator
             let message = wire::Aggregation {
                 round: round,
-                payload: Some(Payload::Signature(crate::handlers::wire::aggregation::Signature {
-                    signature: signature.to_vec(),
-                })),
+                payload: Some(Payload::Signature(
+                    crate::handlers::wire::aggregation::Signature {
+                        signature: signature.to_vec(),
+                    },
+                )),
             };
             let mut buf = Vec::with_capacity(message.encode_size());
             message.write(&mut buf);

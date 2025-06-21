@@ -4,28 +4,28 @@
 mod bindings;
 mod handlers;
 
-use ark_bn254::{Fr};
+use ark_bn254::Fr;
 use bn254::{Bn254, PrivateKey};
 use clap::{Arg, Command};
 use commonware_cryptography::Signer;
+use commonware_eigenlayer::network_configuration::{EigenStakingClient, QuorumInfo};
 use commonware_p2p::authenticated::{self, Network};
 use commonware_runtime::{
     Metrics, Runner, Spawner,
     tokio::{self},
 };
+use dotenv;
+use eigen_logging::log_level::LogLevel;
 use governor::Quota;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::env;
 use std::fs;
+use std::str::FromStr;
 use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     num::NonZeroU32,
 };
-use std::str::FromStr;
-use commonware_eigenlayer::network_configuration::{EigenStakingClient, QuorumInfo};
-use std::env;
-use dotenv;
-use eigen_logging::log_level::LogLevel;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[allow(non_snake_case)]
@@ -72,16 +72,18 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
 
 async fn get_operator_states() -> Result<Vec<QuorumInfo>, Box<dyn std::error::Error>> {
     dotenv::dotenv().ok();
-    
+
     let http_rpc = env::var("HTTP_RPC").expect("HTTP_RPC must be set");
     let ws_rpc = env::var("WS_RPC").expect("WS_RPC must be set");
-    let avs_deployment_path = env::var("AVS_DEPLOYMENT_PATH").expect("AVS_DEPLOYMENT_PATH must be set");
-    
+    let avs_deployment_path =
+        env::var("AVS_DEPLOYMENT_PATH").expect("AVS_DEPLOYMENT_PATH must be set");
+
     let client = EigenStakingClient::new(
         String::from(http_rpc),
         String::from(ws_rpc),
         String::from(avs_deployment_path),
-    ).await?;
+    )
+    .await?;
 
     client.get_operator_states().await
 }
@@ -90,7 +92,7 @@ fn main() {
     // Initialize runtime
     let runtime_cfg = tokio::Config::default();
     let runner = tokio::Runner::new(runtime_cfg.clone());
-    
+
     // Parse arguments
     let matches = Command::new("commonware-aggregation")
         .about("generate and verify BN254 Multi-Signatures")
@@ -113,20 +115,21 @@ fn main() {
                 .help("Path to orchestrator key file"),
         )
         .get_matches();
-    
 
     // Configure my identity
     let (signer, port) = configure_identity(&matches);
 
     // Get operator states
-    
+
     // Start runtime
     runner.start(|context: tokio::Context| async move {
         let mut recipients = Vec::new();
         // Scoped to avoid configuring two loggers
         {
             eigen_logging::init_logger(LogLevel::Debug);
-            let quorum_infos = get_operator_states().await.expect("Failed to get operator states");
+            let quorum_infos = get_operator_states()
+                .await
+                .expect("Failed to get operator states");
             // Configure allowed peers
             let participants = quorum_infos[0].operators.clone(); //TODO: Fix hardcoded quorum_number
             if participants.len() == 0 {
@@ -154,7 +157,7 @@ fn main() {
         let bootstrapper_address =
             SocketAddr::from_str(parts[1]).expect("Bootstrapper address not well-formed");
         let bootstrapper_identities = vec![(verifier, bootstrapper_address)];
-    
+
         // Configure network
         const MAX_MESSAGE_SIZE: usize = 1024 * 1024; // 1 MB
         let p2p_cfg = authenticated::Config::aggressive(
@@ -175,7 +178,9 @@ fn main() {
         // Parse contributors from operator states
         let mut contributors = Vec::new();
         let mut contributors_map = HashMap::new();
-        let quorum_infos = get_operator_states().await.expect("Failed to get operator states");
+        let quorum_infos = get_operator_states()
+            .await
+            .expect("Failed to get operator states");
         let operators = &quorum_infos[0].operators;
         if operators.len() == 0 {
             panic!("Please provide at least one contributor");
@@ -204,11 +209,7 @@ fn main() {
         );
         let orchestrator_key = load_key_from_file(orchestrator_file);
         let orchestrator = get_signer_from_fr(&orchestrator_key).public_key();
-        let contributor = handlers::Contributor::new(
-            orchestrator,
-            signer,
-            contributors,
-        );
+        let contributor = handlers::Contributor::new(orchestrator, signer, contributors);
         context.spawn(|_| async move { contributor.run(sender, receiver).await });
 
         network.start().await.expect("Failed to start network");
