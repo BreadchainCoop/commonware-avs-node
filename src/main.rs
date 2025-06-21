@@ -14,7 +14,6 @@ use commonware_runtime::{
     Metrics, Runner, Spawner,
     tokio::{self},
 };
-use dotenv;
 use eigen_logging::log_level::LogLevel;
 use governor::Quota;
 use serde::{Deserialize, Serialize};
@@ -79,9 +78,9 @@ async fn get_operator_states() -> Result<Vec<QuorumInfo>, Box<dyn std::error::Er
         env::var("AVS_DEPLOYMENT_PATH").expect("AVS_DEPLOYMENT_PATH must be set");
 
     let client = EigenStakingClient::new(
-        String::from(http_rpc),
-        String::from(ws_rpc),
-        String::from(avs_deployment_path),
+        http_rpc,
+        ws_rpc,
+        avs_deployment_path,
     )
     .await?;
 
@@ -132,7 +131,7 @@ fn main() {
                 .expect("Failed to get operator states");
             // Configure allowed peers
             let participants = quorum_infos[0].operators.clone(); //TODO: Fix hardcoded quorum_number
-            if participants.len() == 0 {
+            if participants.is_empty() {
                 panic!("Please provide at least one participant");
             }
             for participant in participants {
@@ -182,7 +181,7 @@ fn main() {
             .await
             .expect("Failed to get operator states");
         let operators = &quorum_infos[0].operators;
-        if operators.len() == 0 {
+        if operators.is_empty() {
             panic!("Please provide at least one contributor");
         }
         for operator in operators {

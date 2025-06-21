@@ -92,7 +92,7 @@ impl Contributor {
 
             // Return signature to orchestrator
             let message = wire::Aggregation {
-                round: round,
+                round,
                 payload: Some(Payload::Signature(
                     crate::handlers::wire::aggregation::Signature {
                         signature: signature.to_vec(),
