@@ -17,10 +17,7 @@ use governor::Quota;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
-use std::{
-    net::{IpAddr, Ipv4Addr, SocketAddr},
-    num::NonZeroU32,
-};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use commonware_utils::NZU32;
 use std::str::FromStr;
 use commonware_eigenlayer::network_configuration::{EigenStakingClient, QuorumInfo};
@@ -34,17 +31,18 @@ struct KeyConfig {
     privateKey: String,
 }
 
+fn get_signer(key: &str) -> Bn254 {
+    let fr = Fr::from_str(key).expect("Invalid decimal string for private key");
+    let key = PrivateKey::from(fr);
+    Bn254::new(key).expect("Failed to create signer")
+}
+
 fn load_key_from_file(path: &str) -> String {
     let contents = fs::read_to_string(path).expect("Could not read key file");
     let config: KeyConfig = serde_json::from_str(&contents).expect("Could not parse key file");
     config.privateKey
 }
 
-fn get_signer_from_fr(key: &str) -> Bn254 {
-    let fr = Fr::from_str(key).expect("Invalid decimal string for private key");
-    let key = PrivateKey::from(fr);
-    <Bn254 as Signer>::from(key).expect("Failed to create signer")
-}
 
 // Unique namespace to avoid message replay attacks.
 const APPLICATION_NAMESPACE: &[u8] = b"_COMMONWARE_AGGREGATION_";
@@ -63,7 +61,7 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
         panic!("Identity not well-formed");
     }
     let key = parts[0];
-    let signer = get_signer_from_fr(key);
+    let signer = get_signer(key);
 
     let port = parts[1].parse::<u16>().expect("Port not well-formed");
     tracing::info!(port, "loaded port");
@@ -138,7 +136,7 @@ fn main() {
                 tracing::info!(key = ?verifier, "registered authorized key",);
                 recipients.push(verifier);
             }
-            let test_signer = get_signer_from_fr("69");
+            let test_signer = get_signer("69");
             let test_verifier = test_signer.public_key();
             recipients.push(test_verifier);
         }
@@ -163,8 +161,9 @@ fn main() {
 
         // Provide authorized peers
         let mut recipients_with_addr: Vec<(bn254::PublicKey, SocketAddr)> = Vec::new();
+        let quorum_infos = get_operator_states().await.expect("Failed to get operator states");
         for participant in &quorum_infos[0].operators {
-            let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key;
+            let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
             if let Some(socket) = &participant.socket {
                 let socket_addr = SocketAddr::from_str(socket).expect("Socket address not well-formed");
                 recipients_with_addr.push((verifier, socket_addr));
@@ -190,7 +189,6 @@ fn main() {
 
         // Check if I am the orchestrator
         const DEFAULT_MESSAGE_BACKLOG: usize = 256;
-        const COMPRESSION_LEVEL: Option<i32> = Some(3);
 
         let orchestrator_file = matches
             .get_one::<String>("orchestrator")
@@ -202,7 +200,7 @@ fn main() {
             DEFAULT_MESSAGE_BACKLOG,
         );
         let orchestrator_key = load_key_from_file(orchestrator_file);
-        let orchestrator = get_signer_from_fr(&orchestrator_key).public_key();
+        let orchestrator = get_signer(&orchestrator_key).public_key();
         let contributor = handlers::Contributor::new(
             orchestrator,
             signer,
