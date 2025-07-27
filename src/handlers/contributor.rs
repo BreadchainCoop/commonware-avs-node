@@ -41,7 +41,7 @@ impl Contributor {
     }
 
     pub async fn run(
-        mut self,
+        self,
         mut sender: impl Sender,
         mut receiver: impl Receiver<PublicKey = PublicKey>,
     ) -> Result<()> {
