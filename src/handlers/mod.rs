@@ -1,4 +1,4 @@
 mod contributor;
 pub use contributor::Contributor;
-pub mod wire; 
 pub mod validator;
+pub mod wire;
