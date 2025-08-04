@@ -49,3 +49,40 @@ prost-build = "0.13.5"
 
 [patch.crates-io]
 deranged = { git = "https://github.com/jhpratt/deranged", rev = "3c95431a375bca409a4731ae8749acc84e076267" }
+
+# Clippy configuration for enhanced linting
+[lints.clippy]
+# Pedantic lints for better code quality
+pedantic = "warn"
+nursery = "warn"
+
+# Specific lints to enforce
+missing_docs_in_private_items = "warn"
+missing_errors_doc = "warn"
+missing_panics_doc = "warn"
+missing_safety_doc = "warn"
+undocumented_unsafe_blocks = "deny"
+unnecessary_safety_doc = "warn"
+
+# Performance lints
+large_stack_arrays = "warn"
+large_futures = "warn"
+large_enum_variant = "warn"
+
+# Style lints
+enum_glob_use = "warn"
+wildcard_imports = "warn"
+module_name_repetitions = "allow"  # Common in bindings
+similar_names = "allow"  # Common in crypto code
+
+# Complexity lints
+cognitive_complexity = "warn"
+too_many_lines = "warn"
+type_complexity = "warn"
+
+# Correctness lints
+panic = "deny"
+unwrap_used = "deny"
+expect_used = "warn"
+indexing_slicing = "warn"
+integer_arithmetic = "warn"

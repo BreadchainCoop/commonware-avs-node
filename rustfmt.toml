@@ -1,0 +1,54 @@
+# Rustfmt configuration for consistent code formatting
+# https://rust-lang.github.io/rustfmt/
+
+# Basic formatting options
+edition = "2024"
+hard_tabs = false
+tab_spaces = 4
+max_width = 100
+use_small_heuristics = "Default"
+
+# Import and use statement formatting
+imports_granularity = "Crate"
+group_imports = "StdExternalCrate"
+reorder_imports = true
+imports_layout = "Mixed"
+
+# Function and struct formatting
+fn_args_layout = "Tall"
+where_single_line = false
+force_explicit_abi = true
+
+# Comments and documentation
+normalize_comments = true
+wrap_comments = true
+comment_width = 80
+normalize_doc_attributes = true
+
+# Control flow formatting
+control_brace_style = "AlwaysSameLine"
+brace_style = "SameLineWhere"
+
+# Trailing elements
+trailing_comma = "Vertical"
+trailing_semicolon = true
+
+# Formatting options for better readability
+space_before_colon = false
+space_after_colon = true
+spaces_around_ranges = false
+binop_separator = "Front"
+
+# String and array formatting
+format_strings = false
+format_macro_matchers = true
+format_macro_bodies = true
+
+# Miscellaneous
+merge_derives = true
+use_try_shorthand = false
+use_field_init_shorthand = false
+force_explicit_abi = true
+empty_item_single_line = true
+struct_lit_single_line = true
+fn_single_line = false
