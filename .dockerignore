@@ -1,0 +1,60 @@
+# Git files
+.git
+.gitignore
+.github
+
+# Build artifacts
+target/
+Cargo.lock
+**/*.rs.bk
+*.pdb
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+LICENSE
+docs/
+
+# Testing
+tests/
+benches/
+examples/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Docker files
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Environment files
+.env
+.env.*
+!example.env
+
+# Monitoring
+monitoring/
+prometheus-data/
+grafana-data/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

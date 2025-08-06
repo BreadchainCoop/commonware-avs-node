@@ -8,6 +8,22 @@ Please see [the following repo](https://github.com/BreadchainCoop/commonware-avs
 cp .example.env .env 
 ```
 
+## Docker Image
+
+Docker images are automatically built and published to GitHub Container Registry with every release.
+
+### Pulling the Docker Image
+
+```bash
+# Pull the latest release
+docker pull ghcr.io/breadchaincoop/commonware-avs-node:latest
+
+# Pull a specific version  
+docker pull ghcr.io/breadchaincoop/commonware-avs-node:v1.2.3
+```
+
+Multi-architecture images are available for both `linux/amd64` and `linux/arm64`.
+
 ## Running Contributors
 ```bash
 source .env
