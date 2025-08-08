@@ -4,33 +4,44 @@
 mod bindings;
 mod handlers;
 
-use ark_bn254::{Fr};
+use ark_bn254::Fr;
 use bn254::{Bn254, PrivateKey};
 use clap::{Arg, Command};
-use commonware_cryptography::Signer;
-use commonware_p2p::authenticated::{self, Network};
+use commonware_eigenlayer::network_configuration::{EigenStakingClient, QuorumInfo};
+use commonware_p2p::authenticated::lookup::{self, Network};
 use commonware_runtime::{
     Metrics, Runner, Spawner,
     tokio::{self},
 };
+use commonware_utils::NZU32;
+use eigen_logging::log_level::LogLevel;
 use governor::Quota;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs;
-use std::{
-    net::{IpAddr, Ipv4Addr, SocketAddr},
-    num::NonZeroU32,
-};
-use std::str::FromStr;
-use commonware_eigenlayer::network_configuration::{EigenStakingClient, QuorumInfo};
 use std::env;
-use dotenv;
-use eigen_logging::log_level::LogLevel;
+use std::fs;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[allow(non_snake_case)]
 struct KeyConfig {
     privateKey: String,
+}
+#[derive(Debug, Serialize, Deserialize)]
+#[allow(non_snake_case)]
+struct OrchestratorConfig {
+    g2_x1: String,
+    g2_x2: String,
+    g2_y1: String,
+    g2_y2: String,
+    port: String,
+}
+
+fn get_signer(key: &str) -> Bn254 {
+    let fr = Fr::from_str(key).expect("Invalid decimal string for private key");
+    let key = PrivateKey::from(fr);
+    Bn254::new(key).expect("Failed to create signer")
 }
 
 fn load_key_from_file(path: &str) -> String {
@@ -39,10 +50,11 @@ fn load_key_from_file(path: &str) -> String {
     config.privateKey
 }
 
-fn get_signer_from_fr(key: &str) -> Bn254 {
-    let fr = Fr::from_str(key).expect("Invalid decimal string for private key");
-    let key = PrivateKey::from(fr);
-    <Bn254 as Signer>::from(key).expect("Failed to create signer")
+fn load_orchestrator_config(path: &str) -> OrchestratorConfig {
+    let contents = fs::read_to_string(path).expect("Could not read key file");
+    let config: OrchestratorConfig =
+        serde_json::from_str(&contents).expect("Could not parse key file");
+    config
 }
 
 // Unique namespace to avoid message replay attacks.
@@ -62,7 +74,7 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
         panic!("Identity not well-formed");
     }
     let key = parts[0];
-    let signer = get_signer_from_fr(key);
+    let signer = get_signer(key);
 
     let port = parts[1].parse::<u16>().expect("Port not well-formed");
     tracing::info!(port, "loaded port");
@@ -70,18 +82,22 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
     (signer, port)
 }
 
+fn configure_orchestrator(matches: &clap::ArgMatches) -> OrchestratorConfig {
+    let orchestrator_file = matches
+        .get_one::<String>("orchestrator")
+        .expect("No orchestrator addr");
+    load_orchestrator_config(orchestrator_file)
+}
+
 async fn get_operator_states() -> Result<Vec<QuorumInfo>, Box<dyn std::error::Error>> {
     dotenv::dotenv().ok();
-    
+
     let http_rpc = env::var("HTTP_RPC").expect("HTTP_RPC must be set");
     let ws_rpc = env::var("WS_RPC").expect("WS_RPC must be set");
-    let avs_deployment_path = env::var("AVS_DEPLOYMENT_PATH").expect("AVS_DEPLOYMENT_PATH must be set");
-    
-    let client = EigenStakingClient::new(
-        String::from(http_rpc),
-        String::from(ws_rpc),
-        String::from(avs_deployment_path),
-    ).await?;
+    let avs_deployment_path =
+        env::var("AVS_DEPLOYMENT_PATH").expect("AVS_DEPLOYMENT_PATH must be set");
+
+    let client = EigenStakingClient::new(http_rpc, ws_rpc, avs_deployment_path).await?;
 
     client.get_operator_states().await
 }
@@ -90,7 +106,7 @@ fn main() {
     // Initialize runtime
     let runtime_cfg = tokio::Config::default();
     let runner = tokio::Runner::new(runtime_cfg.clone());
-    
+
     // Parse arguments
     let matches = Command::new("commonware-aggregation")
         .about("generate and verify BN254 Multi-Signatures")
@@ -113,33 +129,52 @@ fn main() {
                 .help("Path to orchestrator key file"),
         )
         .get_matches();
-    
 
     // Configure my identity
     let (signer, port) = configure_identity(&matches);
+    let orchestrator_config = configure_orchestrator(&matches);
 
     // Get operator states
-    
+
     // Start runtime
     runner.start(|context: tokio::Context| async move {
-        let mut recipients = Vec::new();
+        let mut recipients: Vec<(bn254::PublicKey, SocketAddr)> = Vec::new();
         // Scoped to avoid configuring two loggers
+        let orchestrator_pub_key;
         {
             eigen_logging::init_logger(LogLevel::Debug);
-            let quorum_infos = get_operator_states().await.expect("Failed to get operator states");
+            let quorum_infos = get_operator_states()
+                .await
+                .expect("Failed to get operator states");
             // Configure allowed peers
             let participants = quorum_infos[0].operators.clone(); //TODO: Fix hardcoded quorum_number
-            if participants.len() == 0 {
+            if participants.is_empty() {
                 panic!("Please provide at least one participant");
             }
-            for participant in participants {
-                let verifier = participant.pub_keys.unwrap().g2_pub_key;
+            for participant in &participants {
+                let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
                 tracing::info!(key = ?verifier, "registered authorized key",);
-                recipients.push(verifier);
+                if let Some(socket) = &participant.socket {
+                    let socket_addr =
+                        SocketAddr::from_str(socket).expect("contributor address not well-formed");
+                    recipients.push((verifier, socket_addr));
+                }
             }
-            let test_signer = get_signer_from_fr("69");
-            let test_verifier = test_signer.public_key();
-            recipients.push(test_verifier);
+            orchestrator_pub_key = bn254::PublicKey::create_from_g2_coordinates(
+                &orchestrator_config.g2_x1,
+                &orchestrator_config.g2_x2,
+                &orchestrator_config.g2_y1,
+                &orchestrator_config.g2_y2,
+            )
+            .unwrap();
+            let local_addr = SocketAddr::new(
+                IpAddr::V4(Ipv4Addr::LOCALHOST),
+                orchestrator_config
+                    .port
+                    .parse::<u16>()
+                    .expect("Port not well-formed"),
+            );
+            recipients.push((orchestrator_pub_key.clone(), local_addr));
         }
         let subscriber = tracing_subscriber::fmt()
             .with_max_level(tracing::Level::DEBUG)
@@ -147,37 +182,30 @@ fn main() {
             .finish();
         let _ = tracing::subscriber::set_default(subscriber);
 
-        // Configure bootstrappers (hardcoded)
-        let bootstrapper = "69@127.0.0.1:3000";
-        let parts = bootstrapper.split('@').collect::<Vec<&str>>();
-        let verifier = get_signer_from_fr(parts[0]).public_key();
-        let bootstrapper_address =
-            SocketAddr::from_str(parts[1]).expect("Bootstrapper address not well-formed");
-        let bootstrapper_identities = vec![(verifier, bootstrapper_address)];
-    
         // Configure network
         const MAX_MESSAGE_SIZE: usize = 1024 * 1024; // 1 MB
-        let p2p_cfg = authenticated::Config::aggressive(
+        let my_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), port);
+        let my_local_addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), port);
+        let p2p_cfg = lookup::Config::aggressive(
             signer.clone(),
             APPLICATION_NAMESPACE,
-            SocketAddr::new(IpAddr::V4(Ipv4Addr::UNSPECIFIED), port),
-            SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), port),
-            bootstrapper_identities.clone(),
+            my_addr,
+            my_local_addr,
             MAX_MESSAGE_SIZE,
         );
         let (mut network, mut oracle) = Network::new(context.with_label("network"), p2p_cfg);
 
         // Provide authorized peers
-        // In a real-world scenario, this would be updated as new peer sets are created (like when
-        // the composition of a validator set changes).
         oracle.register(0, recipients).await;
 
         // Parse contributors from operator states
         let mut contributors = Vec::new();
         let mut contributors_map = HashMap::new();
-        let quorum_infos = get_operator_states().await.expect("Failed to get operator states");
+        let quorum_infos = get_operator_states()
+            .await
+            .expect("Failed to get operator states");
         let operators = &quorum_infos[0].operators;
-        if operators.len() == 0 {
+        if operators.is_empty() {
             panic!("Please provide at least one contributor");
         }
         for operator in operators {
@@ -190,27 +218,13 @@ fn main() {
 
         // Check if I am the orchestrator
         const DEFAULT_MESSAGE_BACKLOG: usize = 256;
-        const COMPRESSION_LEVEL: Option<i32> = Some(3);
 
-        let orchestrator_file = matches
-            .get_one::<String>("orchestrator")
-            .expect("No orchestrator addr");
         // Create contributor
-        let (sender, receiver) = network.register(
-            0,
-            Quota::per_second(NonZeroU32::new(10).unwrap()),
-            DEFAULT_MESSAGE_BACKLOG,
-            COMPRESSION_LEVEL,
-        );
-        let orchestrator_key = load_key_from_file(orchestrator_file);
-        let orchestrator = get_signer_from_fr(&orchestrator_key).public_key();
-        let contributor = handlers::Contributor::new(
-            orchestrator,
-            signer,
-            contributors,
-        );
+        let (sender, receiver) =
+            network.register(0, Quota::per_second(NZU32!(1)), DEFAULT_MESSAGE_BACKLOG);
+        let contributor = handlers::Contributor::new(orchestrator_pub_key, signer, contributors);
         context.spawn(|_| async move { contributor.run(sender, receiver).await });
 
-        network.start().await.expect("Failed to start network");
+        let _ = network.start().await;
     });
 }

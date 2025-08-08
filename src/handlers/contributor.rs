@@ -1,24 +1,16 @@
-use crate::handlers::validator::Validator;
-use alloy::sol;
-use bn254::{
-    self, Bn254, PublicKey, Signature as Bn254Signature,
-};
+use anyhow::Result;
+use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
+use bytes::Bytes;
+use commonware_avs_router::validator::Validator;
+use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
-use bytes::Bytes;
-use commonware_codec::{EncodeSize, ReadExt, Write};
 use std::collections::{HashMap, HashSet};
 use tracing::info;
 
-use crate::handlers::wire::{self, aggregation::Payload};
-sol! {
-    contract NumberEncoder {
-        #[derive(Debug)]
-        function yourNumbFunc(uint256 number) public returns (bytes memory);
-    }
-}
+use commonware_avs_router::wire::{self, aggregation::Payload};
 
 pub struct Contributor {
     orchestrator: PublicKey,
@@ -27,11 +19,7 @@ pub struct Contributor {
 }
 
 impl Contributor {
-    pub fn new(
-        orchestrator: PublicKey,
-        signer: Bn254,
-        mut contributors: Vec<PublicKey>,
-    ) -> Self {
+    pub fn new(orchestrator: PublicKey, signer: Bn254, mut contributors: Vec<PublicKey>) -> Self {
         dotenv().ok();
         contributors.sort();
         let mut ordered_contributors = HashMap::new();
@@ -47,13 +35,13 @@ impl Contributor {
     }
 
     pub async fn run(
-        mut self,
+        self,
         mut sender: impl Sender,
         mut receiver: impl Receiver<PublicKey = PublicKey>,
-    ) {
+    ) -> Result<()> {
         let mut signed = HashSet::new();
         let mut signatures: HashMap<u64, HashMap<usize, Bn254Signature>> = HashMap::new();
-        let validator = Validator::new().await.unwrap();
+        let validator = Validator::new().await?;
 
         while let Ok((s, message)) = receiver.recv().await {
             // Parse message
@@ -64,7 +52,7 @@ impl Contributor {
 
             // Handle message from orchestrator
             match message.payload {
-                Some(Payload::Start(_)) => (),
+                Some(Payload::Start) => (),
                 _ => continue,
             };
             if s != self.orchestrator {
@@ -79,7 +67,7 @@ impl Contributor {
             }
             let mut buf = Vec::with_capacity(message.encode_size());
             message.write(&mut buf);
-            let payload = validator.validate_and_return_expected_hash(&buf).await.unwrap();
+            let payload = validator.validate_and_return_expected_hash(&buf).await?;
             info!(
                 "Generating signature for round: {}, payload hash: {}",
                 round,
@@ -95,10 +83,11 @@ impl Contributor {
 
             // Return signature to orchestrator
             let message = wire::Aggregation {
-                round: round,
-                payload: Some(Payload::Signature(crate::handlers::wire::aggregation::Signature {
-                    signature: signature.to_vec(),
-                })),
+                round,
+                var1: message.var1.clone(),
+                var2: message.var2.clone(),
+                var3: message.var3.clone(),
+                payload: Some(Payload::Signature(signature.to_vec())),
             };
             let mut buf = Vec::with_capacity(message.encode_size());
             message.write(&mut buf);
@@ -108,8 +97,10 @@ impl Contributor {
             sender
                 .send(commonware_p2p::Recipients::All, Bytes::from(buf), true)
                 .await
-                .expect("failed to broadcast signature");
+                .map_err(|e| anyhow::anyhow!("Failed to broadcast signature: {}", e))?;
             info!(round, "broadcast signature");
         }
+
+        Ok(())
     }
 }
