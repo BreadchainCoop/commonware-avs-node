@@ -1,16 +1,14 @@
+use anyhow::Result;
+use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
+use bytes::Bytes;
 use commonware_avs_router::validator::Validator;
-use bn254::{
-    self, Bn254, PublicKey, Signature as Bn254Signature,
-};
+use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
-use bytes::Bytes;
-use commonware_codec::{EncodeSize, ReadExt, Write};
 use std::collections::{HashMap, HashSet};
 use tracing::info;
-use anyhow::Result;
 
 use commonware_avs_router::wire::{self, aggregation::Payload};
 
@@ -21,11 +19,7 @@ pub struct Contributor {
 }
 
 impl Contributor {
-    pub fn new(
-        orchestrator: PublicKey,
-        signer: Bn254,
-        mut contributors: Vec<PublicKey>,
-    ) -> Self {
+    pub fn new(orchestrator: PublicKey, signer: Bn254, mut contributors: Vec<PublicKey>) -> Self {
         dotenv().ok();
         contributors.sort();
         let mut ordered_contributors = HashMap::new();
@@ -106,7 +100,7 @@ impl Contributor {
                 .map_err(|e| anyhow::anyhow!("Failed to broadcast signature: {}", e))?;
             info!(round, "broadcast signature");
         }
-        
+
         Ok(())
     }
 }
