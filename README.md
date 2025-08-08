@@ -94,3 +94,9 @@ autonumber
     Orchestrator->>Network: Collect signatures
     Orchestrator->>Validator: Verify aggregated signatures
 ```
+## Contributing
+
+- Please ensure code respects formatting and linting before pushing:
+  - `cargo fmt --all -- --check`
+  - `cargo clippy --all-targets --all-features -- -D warnings`
+- CI runs these checks on PRs; make sure they pass locally to avoid failures.

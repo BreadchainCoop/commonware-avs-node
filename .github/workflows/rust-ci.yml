@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - dev
-      - release-001
+      - 9-release-001
 
 jobs:
   check:
