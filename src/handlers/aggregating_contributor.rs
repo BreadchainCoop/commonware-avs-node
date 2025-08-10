@@ -149,7 +149,7 @@ impl AggregatingContributor {
                 }
                 info!(
                     round,
-                    msg = hex(&payload.to_vec()),
+                    msg = hex(&payload),
                     ?participating,
                     signature = hex(&agg_signature),
                     "aggregated signatures",
@@ -190,7 +190,7 @@ impl AggregatingContributor {
 
             // Return signature to orchestrator
             let message = wire::Aggregation {
-                round: round,
+                round,
                 var1: message.var1.clone(),
                 var2: message.var2.clone(),
                 var3: message.var3.clone(),
