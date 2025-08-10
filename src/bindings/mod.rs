@@ -4,6 +4,8 @@
     clippy::pub_underscore_fields,
     clippy::style,
     clippy::empty_structs_with_brackets,
+    clippy::too_many_arguments,
+    clippy::type_complexity,
     missing_docs,
     dead_code
 )]
@@ -15,6 +17,8 @@ pub mod votingcontract;
     clippy::pub_underscore_fields,
     clippy::style,
     clippy::empty_structs_with_brackets,
+    clippy::too_many_arguments,
+    clippy::type_complexity,
     missing_docs,
     dead_code
 )]
@@ -26,6 +30,8 @@ pub mod blssigcheckoperatorstateretriever;
     clippy::pub_underscore_fields,
     clippy::style,
     clippy::empty_structs_with_brackets,
+    clippy::too_many_arguments,
+    clippy::type_complexity,
     missing_docs,
     dead_code
 )]
@@ -37,6 +43,8 @@ pub mod blssignaturechecker;
     clippy::pub_underscore_fields,
     clippy::style,
     clippy::empty_structs_with_brackets,
+    clippy::too_many_arguments,
+    clippy::type_complexity,
     missing_docs,
     dead_code
 )]
@@ -48,6 +56,8 @@ pub mod blsapkregistry;
     clippy::pub_underscore_fields,
     clippy::style,
     clippy::empty_structs_with_brackets,
+    clippy::too_many_arguments,
+    clippy::type_complexity,
     missing_docs,
     dead_code
 )]
