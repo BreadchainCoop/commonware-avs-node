@@ -59,8 +59,17 @@ jobs:
         run: |
           NAME="${{ env.REGISTRY }}/${{ github.repository }}" && NAME="${NAME,,}"
           TAG="${{ github.event_name == 'release' && github.ref_name || (github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'dev') }}"
+          
+          # Always create the version/pr/dev tag
           docker buildx imagetools create \
             -t "${NAME}:${TAG}" \
-            -t "${NAME}:latest" \
             "${NAME}:amd64-${{ github.sha }}" \
             "${NAME}:arm64-${{ github.sha }}"
+          
+          # Only update latest tag for releases
+          if [ "${{ github.event_name }}" = "release" ]; then
+            docker buildx imagetools create \
+              -t "${NAME}:latest" \
+              "${NAME}:amd64-${{ github.sha }}" \
+              "${NAME}:arm64-${{ github.sha }}"
+          fi
