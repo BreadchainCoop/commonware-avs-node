@@ -1,16 +1,17 @@
-use commonware_avs_router::validator::Validator;
+use anyhow::Result;
 use bn254::{
-    self, aggregate_signatures, aggregate_verify, Bn254, G1PublicKey, PublicKey, Signature as Bn254Signature
+    self, Bn254, G1PublicKey, PublicKey, Signature as Bn254Signature, aggregate_signatures,
+    aggregate_verify,
 };
+use bytes::Bytes;
+use commonware_avs_router::validator::Validator;
+use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::{Signer, Verifier};
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
-use bytes::Bytes;
-use commonware_codec::{EncodeSize, ReadExt, Write};
 use std::collections::{HashMap, HashSet};
 use tracing::info;
-use anyhow::Result;
 
 use commonware_avs_router::wire::{self, aggregation::Payload};
 
@@ -49,7 +50,6 @@ impl AggregatingContributor {
             g1_map,
         }
     }
-
 
     pub async fn run(
         self,
@@ -91,7 +91,7 @@ impl AggregatingContributor {
                     _ => {
                         info!("signature not found: {:?}", message.clone().payload);
                         continue;
-                    },
+                    }
                 };
                 let Ok(signature) = Bn254Signature::try_from(signature.clone()) else {
                     info!("not a valid signature: {:?}", signature);
@@ -99,7 +99,10 @@ impl AggregatingContributor {
                 };
                 let mut buf = Vec::with_capacity(message.encode_size());
                 message.write(&mut buf);
-                let payload = validator.validate_and_return_expected_hash(&buf).await.unwrap();
+                let payload = validator
+                    .validate_and_return_expected_hash(&buf)
+                    .await
+                    .unwrap();
                 if !Bn254::verify(&self.signer, None, &payload, &signature) {
                     continue;
                 }
@@ -109,7 +112,11 @@ impl AggregatingContributor {
 
                 // Check if should aggregate
                 if signatures.len() < self.threshold {
-                    info!("current signatures aggregated: {:?}, needed: {:?}, continuing aggregation", signatures.len(), self.threshold);
+                    info!(
+                        "current signatures aggregated: {:?}, needed: {:?}, continuing aggregation",
+                        signatures.len(),
+                        self.threshold
+                    );
                     continue;
                 }
 
@@ -141,7 +148,6 @@ impl AggregatingContributor {
                 );
                 continue;
             }
-
 
             // Handle message from orchestrator
             match message.payload {
@@ -182,7 +188,7 @@ impl AggregatingContributor {
                 var3: message.var3.clone(),
                 payload: Some(Payload::Signature(signature.to_vec())),
             };
-        
+
             let mut buf = Vec::with_capacity(message.encode_size());
             message.write(&mut buf);
             info!("Sending signature for round: {}", round);
@@ -194,7 +200,7 @@ impl AggregatingContributor {
                 .map_err(|e| anyhow::anyhow!("Failed to broadcast signature: {}", e))?;
             info!(round, "broadcast signature");
         }
-        
+
         Ok(())
     }
 }

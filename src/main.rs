@@ -130,18 +130,18 @@ fn main() {
         )
         .arg(
             Arg::new("aggregation")
-            .short('a')
+                .short('a')
                 .required(false)
                 .num_args(0)
-                .help("turn on aggregation")
+                .help("turn on aggregation"),
         )
         .get_matches();
 
     // Configure my identity
     let (signer, port) = configure_identity(&matches);
     let orchestrator_config = configure_orchestrator(&matches);
-    let aggregation: bool =  matches.contains_id("aggregation");
-        
+    let aggregation: bool = matches.contains_id("aggregation");
+
     // Get operator states
 
     // Start runtime
@@ -223,30 +223,28 @@ fn main() {
             contributors.push(verifier.clone());
             contributors_map.insert(verifier, verifier_g1);
         }
-        
 
         // Check if I am the orchestrator
         const DEFAULT_MESSAGE_BACKLOG: usize = 256;
 
         // Create contributor
-        let (sender, receiver) = network.register(
-            0,
-            Quota::per_second(NZU32!(1)),
-            DEFAULT_MESSAGE_BACKLOG,
-        );
-       
+        let (sender, receiver) =
+            network.register(0, Quota::per_second(NZU32!(1)), DEFAULT_MESSAGE_BACKLOG);
+
         if aggregation {
             let signatures_needed = contributors.len();
-            let contributor = handlers::AggregatingContributor::new(orchestrator_pub_key, signer, contributors, signatures_needed, contributors_map);
-                   context.spawn(|_| async move { contributor.run(sender, receiver).await });
-        }
-        else {
-            let contributor = handlers::Contributor::new(
-            orchestrator_pub_key,
-            signer,
-            contributors,
+            let contributor = handlers::AggregatingContributor::new(
+                orchestrator_pub_key,
+                signer,
+                contributors,
+                signatures_needed,
+                contributors_map,
             );
-               context.spawn(|_| async move { contributor.run(sender, receiver).await });
+            context.spawn(|_| async move { contributor.run(sender, receiver).await });
+        } else {
+            let contributor =
+                handlers::Contributor::new(orchestrator_pub_key, signer, contributors);
+            context.spawn(|_| async move { contributor.run(sender, receiver).await });
         }
         let _ = network.start().await;
     });
