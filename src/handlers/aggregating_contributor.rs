@@ -6,7 +6,7 @@ use bn254::{
 use bytes::Bytes;
 use commonware_avs_router::validator::Validator;
 use commonware_codec::{EncodeSize, ReadExt, Write};
-use commonware_cryptography::{Signer, Verifier};
+use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
@@ -99,11 +99,16 @@ impl AggregatingContributor {
                 };
                 let mut buf = Vec::with_capacity(message.encode_size());
                 message.write(&mut buf);
-                let payload = validator
-                    .validate_and_return_expected_hash(&buf)
-                    .await
-                    .unwrap();
-                if !Bn254::verify(&self.signer, None, &payload, &signature) {
+                let Ok(payload) = validator.validate_and_return_expected_hash(&buf).await else {
+                    info!(
+                        "failed to validate payload for contributor: {:?}",
+                        contributor
+                    );
+                    continue;
+                };
+                // Verify signature from contributor using aggregate_verify with single public key
+                if !aggregate_verify(&[s.clone()], None, &payload, &signature) {
+                    info!("invalid signature from contributor: {:?}", contributor);
                     continue;
                 }
 
@@ -133,7 +138,10 @@ impl AggregatingContributor {
                     participating_g1.push(self.g1_map[contributor].clone());
                     sigs.push(signature.clone());
                 }
-                let agg_signature = aggregate_signatures(&sigs).unwrap();
+                let Some(agg_signature) = aggregate_signatures(&sigs) else {
+                    info!("failed to aggregate signatures");
+                    continue;
+                };
 
                 // Verify aggregated signature (already verified individual signatures so should never fail)
                 if !aggregate_verify(&participating, None, &payload, &agg_signature) {
@@ -154,10 +162,6 @@ impl AggregatingContributor {
                 Some(Payload::Start) => (),
                 _ => continue,
             };
-            if s != self.orchestrator {
-                info!("not from orchestrator: {:?}", s);
-                continue;
-            }
 
             // Check if already signed at round
             if !signed.insert(round) {
