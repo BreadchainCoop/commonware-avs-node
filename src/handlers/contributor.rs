@@ -89,7 +89,7 @@ impl Contributor {
 
             // Return signature to orchestrator
             let message = wire::Aggregation {
-                round: round,
+                round,
                 var1: message.var1.clone(),
                 var2: message.var2.clone(),
                 var3: message.var3.clone(),
