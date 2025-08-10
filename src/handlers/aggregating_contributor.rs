@@ -1,4 +1,3 @@
-use alloy::sol;
 use anyhow::Result;
 use bn254::{
     self, Bn254, G1PublicKey, PublicKey, Signature as Bn254Signature, aggregate_signatures,
@@ -15,13 +14,6 @@ use std::collections::{HashMap, HashSet};
 use tracing::info;
 
 use commonware_avs_router::wire::{self, aggregation::Payload};
-
-sol! {
-    contract NumberEncoder {
-        #[derive(Debug)]
-        function yourNumbFunc(uint256 number) public returns (bytes memory);
-    }
-}
 
 pub struct AggregatingContributor {
     orchestrator: PublicKey,
