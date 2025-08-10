@@ -35,7 +35,6 @@ examples/
 .travis.yml
 
 # Docker files
-Dockerfile
 docker-compose*.yml
 .dockerignore
 
