@@ -2719,23 +2719,6 @@ dependencies = [
 [[package]]
 name = "bn254"
 version = "0.1.3"
-source = "git+https://github.com/BreadchainCoop/bn254.git?branch=1-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p#a6f3c8dd2960dc61ad2f0d8481d8873a153ff982"
-dependencies = [
- "ark-bn254",
- "ark-ec",
- "ark-ff 0.5.0",
- "ark-serialize 0.5.0",
- "bytes",
- "commonware-codec",
- "commonware-cryptography",
- "commonware-utils",
- "eigen-crypto-bn254 0.5.0",
- "rand 0.8.5",
-]
-
-[[package]]
-name = "bn254"
-version = "0.1.3"
 source = "git+https://github.com/BreadchainCoop/bn254.git#8e8b32a5899707b04ce53e7f1a096213589d504c"
 dependencies = [
  "ark-bn254",
@@ -3068,13 +3051,13 @@ dependencies = [
  "ark-ec",
  "ark-ff 0.5.0",
  "ark-serialize 0.5.0",
- "bn254 0.1.3 (git+https://github.com/BreadchainCoop/bn254.git)",
+ "bn254",
  "bytes",
  "clap",
  "commonware-avs-router",
  "commonware-codec",
  "commonware-cryptography",
- "commonware-eigenlayer 0.1.0 (git+https://github.com/BreadchainCoop/commonware-avs-network-lookup)",
+ "commonware-eigenlayer",
  "commonware-macros",
  "commonware-p2p",
  "commonware-runtime",
@@ -3101,7 +3084,7 @@ dependencies = [
 [[package]]
 name = "commonware-avs-router"
 version = "0.1.0"
-source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=22-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p#e74852b0656e0d7aacd95ed6b07a047d85603206"
+source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=feat%2Frefactor-validator#7921f300fcd1159e0dab36b26ed82e7e128028d7"
 dependencies = [
  "alloy 0.12.6",
  "alloy-primitives",
@@ -3115,12 +3098,12 @@ dependencies = [
  "ark-serialize 0.5.0",
  "async-trait",
  "axum 0.7.9",
- "bn254 0.1.3 (git+https://github.com/BreadchainCoop/bn254.git?branch=1-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p)",
+ "bn254",
  "bytes",
  "clap",
  "commonware-codec",
  "commonware-cryptography",
- "commonware-eigenlayer 0.1.0 (git+https://github.com/BreadchainCoop/commonware-avs-network-lookup?branch=8-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p)",
+ "commonware-eigenlayer",
  "commonware-macros",
  "commonware-p2p",
  "commonware-runtime",
@@ -3184,39 +3167,6 @@ dependencies = [
 [[package]]
 name = "commonware-eigenlayer"
 version = "0.1.0"
-source = "git+https://github.com/BreadchainCoop/commonware-avs-network-lookup?branch=8-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p#d9894fd5b31bb7aeae0678c30ecdb484757f9855"
-dependencies = [
- "alloy 0.8.3",
- "alloy-network 0.5.4",
- "alloy-primitives",
- "alloy-provider 0.5.4",
- "alloy-transport 0.5.4",
- "alloy-transport-http 0.5.4",
- "anyhow",
- "bn254 0.1.3 (git+https://github.com/BreadchainCoop/bn254.git?branch=1-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p)",
- "eigen-client-avsregistry",
- "eigen-common",
- "eigen-crypto-bls 0.1.3",
- "eigen-crypto-bn254 0.1.3",
- "eigen-logging",
- "eigen-services-avsregistry",
- "eigen-services-blsaggregation",
- "eigen-services-operatorsinfo",
- "eigen-types",
- "eigen-utils 0.1.3",
- "eyre",
- "rand 0.9.1",
- "serde",
- "serde_json",
- "tokio",
- "tokio-rustls 0.24.1",
- "tokio-util",
- "url",
-]
-
-[[package]]
-name = "commonware-eigenlayer"
-version = "0.1.0"
 source = "git+https://github.com/BreadchainCoop/commonware-avs-network-lookup#a76cb2f9b619001ec48eaf299cfd1a80fe08b50c"
 dependencies = [
  "alloy 0.8.3",
@@ -3226,7 +3176,7 @@ dependencies = [
  "alloy-transport 0.5.4",
  "alloy-transport-http 0.5.4",
  "anyhow",
- "bn254 0.1.3 (git+https://github.com/BreadchainCoop/bn254.git)",
+ "bn254",
  "eigen-client-avsregistry",
  "eigen-common",
  "eigen-crypto-bls 0.1.3",
