@@ -1,7 +1,7 @@
 use anyhow::Result;
 use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
 use bytes::Bytes;
-use commonware_avs_router::validator::Validator;
+use commonware_avs_router::validator::factory;
 use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
@@ -41,7 +41,7 @@ impl Contributor {
     ) -> Result<()> {
         let mut signed = HashSet::new();
         let mut signatures: HashMap<u64, HashMap<usize, Bn254Signature>> = HashMap::new();
-        let validator = Validator::new().await?;
+        let validator = factory::create_blockchain_validator().await?;
 
         while let Ok((s, message)) = receiver.recv().await {
             // Parse message
