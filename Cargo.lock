@@ -3083,7 +3083,7 @@ dependencies = [
 [[package]]
 name = "commonware-avs-router"
 version = "0.1.0"
-source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=feat%2Frefactor-orchestrator#38e11db4b9c5aa5c6fc1cd9b4d7887f585a2cd8a"
+source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=54-release-002#938142913513a6082f415101a5163e3869dd9b7e"
 dependencies = [
  "alloy 0.12.6",
  "alloy-primitives",
