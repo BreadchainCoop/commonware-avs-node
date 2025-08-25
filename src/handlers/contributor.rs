@@ -1,6 +1,7 @@
 use anyhow::Result;
 use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
 use bytes::Bytes;
+use commonware_avs_router::usecases::counter::creators::CounterTaskData;
 use commonware_avs_router::usecases::counter::validators::CounterValidator;
 use commonware_avs_router::validator::Validator;
 use commonware_codec::{EncodeSize, ReadExt, Write};
@@ -47,7 +48,9 @@ impl Contributor {
 
         while let Ok((s, message)) = receiver.recv().await {
             // Parse message
-            let Ok(message) = wire::Aggregation::read(&mut std::io::Cursor::new(message)) else {
+            let Ok(message): Result<wire::Aggregation<CounterTaskData>, _> =
+                wire::Aggregation::read(&mut std::io::Cursor::new(message))
+            else {
                 continue;
             };
             let round = message.round;
@@ -84,7 +87,7 @@ impl Contributor {
                 .insert(self.me, signature.clone());
 
             // Return signature to orchestrator
-            let message = wire::Aggregation {
+            let message = wire::Aggregation::<CounterTaskData> {
                 round,
                 metadata: message.metadata.clone(),
                 payload: Some(Payload::Signature(signature.to_vec())),
