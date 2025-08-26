@@ -1,8 +1,8 @@
 use anyhow::Result;
 use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
 use bytes::Bytes;
-use commonware_avs_router::usecases::counter::creators::CounterTaskData;
-use commonware_avs_router::usecases::counter::validators::CounterValidator;
+use commonware_avs_router::usecases::counter::creator::CounterTaskData;
+use commonware_avs_router::usecases::counter::validator::CounterValidator;
 use commonware_avs_router::validator::Validator;
 use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
