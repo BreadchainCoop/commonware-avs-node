@@ -61,7 +61,7 @@ impl Contribute for Contributor {
         if let Some(aggregation_input) = aggregation_input {
             let threshold = aggregation_input.threshold;
             let g1_map = aggregation_input.g1_map;
-            return Self {
+            Self {
                 orchestrator,
                 signer,
                 me,
@@ -71,14 +71,14 @@ impl Contribute for Contributor {
                     contributors,
                     ordered_contributors,
                 }),
-            };
+            }
         } else {
-            return Self {
+            Self {
                 orchestrator,
                 signer,
                 me,
                 aggregation_data: None,
-            };
+            }
         }
     }
 
@@ -173,7 +173,7 @@ impl Contribute for Contributor {
                         };
                         let contributor = &contributors[i];
                         participating.push(contributor.clone());
-                        participating_g1.push(g1_map[&contributor].clone());
+                        participating_g1.push(g1_map[contributor].clone());
                         sigs.push(signature.clone());
                     }
                     let Some(agg_signature) = aggregate_signatures(&sigs) else {
