@@ -1,5 +1,5 @@
 use anyhow::Result;
-use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
+use bn254::{self, Bn254 as EllipticCurve, PublicKey as PubKey, Signature as Sig};
 use bytes::Bytes;
 use commonware_avs_router::validator::Validator;
 use commonware_codec::{EncodeSize, ReadExt, Write};
@@ -9,17 +9,34 @@ use commonware_utils::hex;
 use dotenv::dotenv;
 use std::collections::{HashMap, HashSet};
 use tracing::info;
-
+use crate::handlers::traits::Contribute;
 use commonware_avs_router::wire::{self, aggregation::Payload};
 
 pub struct Contributor {
-    orchestrator: PublicKey,
-    signer: Bn254,
+    orchestrator: PubKey,
+    signer: EllipticCurve,
     me: usize,
 }
 
 impl Contributor {
-    pub fn new(orchestrator: PublicKey, signer: Bn254, mut contributors: Vec<PublicKey>) -> Self {
+    pub fn new(orchestrator: PubKey, signer: EllipticCurve, contributors: Vec<PubKey>) -> Self {
+        <Self as Contribute>::new(orchestrator, signer, contributors)
+    }
+
+    pub async fn run<S, R>(self, sender: S, receiver: R) -> Result<()>
+    where
+        S: Sender,
+        R: Receiver<PublicKey = PubKey>,
+    {
+        <Self as Contribute>::run(self, sender, receiver).await
+    }
+}
+
+impl Contribute for Contributor {
+    type PublicKey = PubKey;
+    type Signer = EllipticCurve;
+
+    fn new(orchestrator: PubKey, signer: EllipticCurve, mut contributors: Vec<PubKey>) -> Self {
         dotenv().ok();
         contributors.sort();
         let mut ordered_contributors = HashMap::new();
@@ -34,13 +51,17 @@ impl Contributor {
         }
     }
 
-    pub async fn run(
+    async fn run<S, R>(
         self,
-        mut sender: impl Sender,
-        mut receiver: impl Receiver<PublicKey = PublicKey>,
-    ) -> Result<()> {
+        mut sender: S,
+        mut receiver: R,
+    ) -> Result<()>
+    where
+        S: Sender,
+        R: Receiver<PublicKey = PubKey>
+        {
         let mut signed = HashSet::new();
-        let mut signatures: HashMap<u64, HashMap<usize, Bn254Signature>> = HashMap::new();
+        let mut signatures: HashMap<u64, HashMap<usize, Sig>> = HashMap::new();
         let validator = Validator::new().await?;
 
         while let Ok((s, message)) = receiver.recv().await {
