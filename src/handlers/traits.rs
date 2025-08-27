@@ -7,11 +7,13 @@ use commonware_p2p::{Receiver, Sender};
 pub trait Contribute {
     type PublicKey: PublicKey + Ord + Eq + Hash + Clone;
     type Signer: Signer<PublicKey = Self::PublicKey>;
+    type AggregationInput;
 
     fn new(
         orchestrator: Self::PublicKey,
         signer: Self::Signer,
         contributors: Vec<Self::PublicKey>,
+        aggregation_data: Option<Self::AggregationInput>,
     ) -> Self;
 
     async fn run<S, R>(self, sender: S, receiver: R) -> Result<()>

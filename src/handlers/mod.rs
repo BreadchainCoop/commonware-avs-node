@@ -1,5 +1,5 @@
-mod aggregating_contributor;
-mod traits;
 mod contributor;
-pub use aggregating_contributor::AggregatingContributor;
-pub use contributor::Contributor;
+pub mod traits;
+// mod aggregating_contributor;
+pub use contributor::{AggregationInput, Contributor};
+// pub use aggregating_contributor::AggregatingContributor;

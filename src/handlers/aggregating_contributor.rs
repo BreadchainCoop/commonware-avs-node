@@ -14,6 +14,10 @@ use std::collections::{HashMap, HashSet};
 use tracing::info;
 
 use commonware_avs_router::wire::{self, aggregation::Payload};
+use crate::handlers::traits::Contribute;
+use crate::handlers::traits::Contribute;
+
+use super::traits::AggregationInput;
 
 pub struct AggregatingContributor {
     orchestrator: PublicKey,
@@ -24,14 +28,16 @@ pub struct AggregatingContributor {
     ordered_contributors: HashMap<PublicKey, usize>,
     threshold: usize,
 }
+ 
+impl Contribute for AggregatingContributor {
+    type PublicKey = PublicKey;
+    type Signer = Bn254;
 
-impl AggregatingContributor {
-    pub fn new(
+    fn new(
         orchestrator: PublicKey,
         signer: Bn254,
         mut contributors: Vec<PublicKey>,
-        threshold: usize,
-        g1_map: HashMap<PublicKey, G1PublicKey>,
+        aggregation_data: Option<AggregationInput>
     ) -> Self {
         dotenv().ok();
         contributors.sort();
@@ -40,6 +46,7 @@ impl AggregatingContributor {
             ordered_contributors.insert(contributor.clone(), idx);
         }
         let me = *ordered_contributors.get(&signer.public_key()).unwrap();
+       
         Self {
             orchestrator,
             signer,
@@ -51,11 +58,15 @@ impl AggregatingContributor {
         }
     }
 
-    pub async fn run(
+    async fn run<S, R>(
         self,
-        mut sender: impl Sender,
-        mut receiver: impl Receiver<PublicKey = PublicKey>,
-    ) -> Result<()> {
+        mut sender: S,
+        mut receiver: R,
+    ) -> Result<()>
+    where
+        S: Sender,
+        R: Receiver<PublicKey = PublicKey>
+        {
         let mut signed = HashSet::new();
         let mut signatures: HashMap<u64, HashMap<usize, Bn254Signature>> = HashMap::new();
         let validator = Validator::new().await?;
@@ -67,6 +78,7 @@ impl AggregatingContributor {
             };
             let round = message.round;
 
+            
             // Check if from orchestrator
             if s != self.orchestrator {
                 // Get contributor
@@ -206,5 +218,32 @@ impl AggregatingContributor {
         }
 
         Ok(())
+    }
+}
+
+impl Contribute for AggregatingContributor {
+    type PublicKey = PublicKey;
+    type Signer = Bn254;
+
+    fn new(
+        orchestrator: Self::PublicKey,
+        signer: Self::Signer,
+        mut contributors: Vec<Self::PublicKey>,
+    ) -> Self {
+        // Default aggregation settings when constructed via Contribute::new
+        let threshold = contributors.len();
+        let g1_map: HashMap<PublicKey, G1PublicKey> = HashMap::new();
+
+        // Reuse the existing constructor
+        Self::new(orchestrator, signer, contributors, threshold, g1_map)
+    }
+
+    async fn run<S, R>(self, sender: S, receiver: R) -> Result<()>
+    where
+        S: Sender,
+        R: Receiver<PublicKey = Self::PublicKey>,
+    {
+        // Forward to the inherent method implementation
+        self.run(sender, receiver).await
     }
 }

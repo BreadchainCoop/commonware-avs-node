@@ -3,7 +3,6 @@
 //! # Usage (3 of 4 Threshold)
 mod bindings;
 mod handlers;
-
 use ark_bn254::Fr;
 use bn254::{Bn254, PrivateKey};
 use clap::{Arg, Command};
@@ -16,6 +15,8 @@ use commonware_runtime::{
 use commonware_utils::NZU32;
 use eigen_logging::log_level::LogLevel;
 use governor::Quota;
+use handlers::AggregationInput;
+use handlers::traits::Contribute;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
@@ -231,21 +232,19 @@ fn main() {
         let (sender, receiver) =
             network.register(0, Quota::per_second(NZU32!(1)), DEFAULT_MESSAGE_BACKLOG);
 
+        let mut aggregation_input: Option<AggregationInput> = None;
         if aggregation {
             let signatures_needed = contributors.len();
-            let contributor = handlers::AggregatingContributor::new(
-                orchestrator_pub_key,
-                signer,
-                contributors,
-                signatures_needed,
-                contributors_map,
-            );
-            context.spawn(|_| async move { contributor.run(sender, receiver).await });
-        } else {
-            let contributor =
-                handlers::Contributor::new(orchestrator_pub_key, signer, contributors);
-            context.spawn(|_| async move { contributor.run(sender, receiver).await });
+            aggregation_input = Some(AggregationInput::new(signatures_needed, contributors_map));
         }
+        let contributor = handlers::Contributor::new(
+            orchestrator_pub_key,
+            signer,
+            contributors,
+            aggregation_input,
+        );
+        context.spawn(|_| async move { contributor.run(sender, receiver).await });
+
         let _ = network.start().await;
     });
 }
