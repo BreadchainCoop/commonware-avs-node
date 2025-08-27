@@ -1,3 +1,5 @@
+#[allow(clippy::collapsible_if)]
+#[allow(clippy::needless_range_loop)]
 use crate::handlers::traits::Contribute;
 use anyhow::Result;
 use bn254::{
@@ -145,7 +147,7 @@ impl Contribute for Contributor {
                         continue;
                     };
                     // Verify signature from contributor using aggregate_verify with single public key
-                    if !aggregate_verify(&[s.clone()], None, &payload, &signature) {
+                    if !aggregate_verify(std::slice::from_ref(&s), None, &payload, &signature) {
                         info!("invalid signature from contributor: {:?}", contributor);
                         continue;
                     }
