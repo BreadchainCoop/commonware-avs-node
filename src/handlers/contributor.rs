@@ -1,5 +1,5 @@
-#[allow(clippy::collapsible_if)]
-#[allow(clippy::needless_range_loop)]
+#![allow(clippy::collapsible_if)]
+#![allow(clippy::needless_range_loop)]
 use crate::handlers::traits::Contribute;
 use anyhow::Result;
 use bn254::{
