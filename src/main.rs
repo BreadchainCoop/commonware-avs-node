@@ -2,6 +2,7 @@
 //!
 //! # Usage (3 of 4 Threshold)
 mod bindings;
+mod contributor;
 mod handlers;
 use ark_bn254::Fr;
 use bn254::{Bn254, PrivateKey};
@@ -13,10 +14,9 @@ use commonware_runtime::{
     tokio::{self},
 };
 use commonware_utils::NZU32;
+use contributor::{AggregationInput, Contribute};
 use eigen_logging::log_level::LogLevel;
 use governor::Quota;
-use handlers::AggregationInput;
-use handlers::traits::Contribute;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
