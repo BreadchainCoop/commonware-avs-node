@@ -6,7 +6,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-commonware-avs-router = { git = "https://github.com/BreadchainCoop/commonware-avs-router", branch = "22-update-commonware-to-0055-and-refactor-lookup-repository-for-authenticated-p2p" }
+commonware-avs-router = { git = "https://github.com/BreadchainCoop/commonware-avs-router", branch = "54-release-002" }
 
 alloy = { version = "0.12.6" }
 alloy-network = "0.5.4"
@@ -38,7 +38,7 @@ governor = "0.6.3"
 prometheus-client = "0.23.1"
 prost = "0.13.5"
 rand = "0.9.1"
-commonware-eigenlayer = {git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup"}
+commonware-eigenlayer = { git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup" }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_yaml = "0.9.34"
 tracing = "0.1.41"

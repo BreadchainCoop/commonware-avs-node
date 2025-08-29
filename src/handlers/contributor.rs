@@ -6,6 +6,8 @@ use bn254::{
     aggregate_verify,
 };
 use bytes::Bytes;
+use commonware_avs_router::usecases::counter::creator::CounterTaskData;
+use commonware_avs_router::usecases::counter::validator::CounterValidator;
 use commonware_avs_router::validator::Validator;
 use commonware_avs_router::wire::{self, aggregation::Payload};
 use commonware_codec::{EncodeSize, ReadExt, Write};
@@ -87,11 +89,14 @@ impl Contribute for Contributor {
     {
         let mut signed = HashSet::new();
         let mut signatures: HashMap<u64, HashMap<usize, Sig>> = HashMap::new();
-        let validator = Validator::new().await?;
+        let counter_validator = CounterValidator::new().await?;
+        let validator = Validator::new(counter_validator);
 
         while let Ok((s, message)) = receiver.recv().await {
             // Parse message
-            let Ok(message) = wire::Aggregation::read(&mut std::io::Cursor::new(message)) else {
+            let Ok(message): Result<wire::Aggregation<CounterTaskData>, _> =
+                wire::Aggregation::read(&mut std::io::Cursor::new(message))
+            else {
                 continue;
             };
             let round = message.round;
@@ -223,11 +228,9 @@ impl Contribute for Contributor {
                 .insert(self.me, signature.clone());
 
             // Return signature to orchestrator
-            let message = wire::Aggregation {
+            let message = wire::Aggregation::<CounterTaskData> {
                 round,
-                var1: message.var1.clone(),
-                var2: message.var2.clone(),
-                var3: message.var3.clone(),
+                metadata: message.metadata.clone(),
                 payload: Some(Payload::Signature(signature.to_vec())),
             };
             let mut buf = Vec::with_capacity(message.encode_size());
