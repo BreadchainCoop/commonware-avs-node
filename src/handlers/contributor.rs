@@ -89,6 +89,7 @@ impl Contribute for Contributor {
     {
         let mut signed = HashSet::new();
         let mut signatures: HashMap<u64, HashMap<usize, Sig>> = HashMap::new();
+
         let counter_validator = CounterValidator::new().await?;
         let validator = Validator::new(counter_validator);
 
