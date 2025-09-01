@@ -35,6 +35,14 @@ cargo run --release -- --key-file $CONTRIBUTOR_2_KEYFILE --port 3002 --orchestra
 source .env
 cargo run --release -- --key-file $CONTRIBUTOR_3_KEYFILE --port 3003 --orchestrator orchestrator.json 
 ```
+If you wish to run an aggregating contributor, add the option `--aggregation` argument, for example, if you want the first contributor to be aggregating,
+```bash
+source .env
+cargo run --release -- --key-file $CONTRIBUTOR_1_KEYFILE --port 3001 --orchestrator orchestrator.json --aggregation
+```
+
+You may also use the short command `-a` in place of `--aggregation`.
+
 
 ---
 
