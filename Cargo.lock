@@ -750,7 +750,6 @@ dependencies = [
  "foldhash",
  "hashbrown 0.15.5",
  "indexmap 2.11.0",
-
  "itoa",
  "k256",
  "keccak-asm",
@@ -2275,7 +2274,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "aws-sdk-kms"version = "1.85.0"
+name = "aws-sdk-kms"
+version = "1.85.0"
+
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "861b59d319d5a504cc3dd4d27542f4f7bc19fa4de27203a923882fc31e994c8a"
 
@@ -2373,6 +2374,7 @@ name = "aws-smithy-runtime"
 version = "1.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3946acbe1ead1301ba6862e712c7903ca9bb230bdf1fbd1b5ac54158ef2ab1f"
+
 
 dependencies = [
  "aws-smithy-async",
@@ -2960,7 +2962,6 @@ name = "clap"
 version = "4.5.46"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2c5e4fcf9c21d2e544ca1ee9d8552de13019a42aa7dbf32747fa7aaf1df76e57"
-
 dependencies = [
  "clap_builder",
 ]
@@ -3082,6 +3083,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml",
+ "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
  "url",
@@ -3091,7 +3093,6 @@ dependencies = [
 name = "commonware-avs-router"
 version = "0.1.0"
 source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=54-release-002#6eb143479387d6a233ab9a07f2a8e9c0a1f0c4f7"
-
 dependencies = [
  "alloy 0.12.6",
  "alloy-primitives",
@@ -4887,7 +4888,6 @@ dependencies = [
  "futures-util",
  "http 0.2.12",
  "indexmap 2.11.0",
-
  "slab",
  "tokio",
  "tokio-util",
@@ -6678,9 +6678,7 @@ dependencies = [
  "quinn-udp",
  "rustc-hash",
  "rustls 0.23.31",
-
  "socket2 0.6.0",
-
  "thiserror 2.0.16",
  "tokio",
  "tracing",
@@ -6720,7 +6718,6 @@ dependencies = [
  "libc",
  "once_cell",
  "socket2 0.6.0",
-
  "tracing",
  "windows-sys 0.60.2",
 ]
@@ -7584,7 +7581,6 @@ dependencies = [
  "hex",
  "indexmap 1.9.3",
  "indexmap 2.11.0",
-
  "schemars 0.9.0",
  "schemars 1.0.4",
  "serde",
@@ -9317,7 +9313,6 @@ dependencies = [
 ]
 
 [[package]]
-
 name = "wit-bindgen"
 version = "0.45.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
