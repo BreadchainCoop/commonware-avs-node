@@ -4,9 +4,19 @@ use anyhow::Result;
 use commonware_cryptography::{PublicKey, Signer};
 use commonware_p2p::{Receiver, Sender};
 
-pub trait Contribute {
+/// Base trait for common contributor functionality
+pub trait ContributorBase {
     type PublicKey: PublicKey + Ord + Eq + Hash + Clone;
     type Signer: Signer<PublicKey = Self::PublicKey>;
+    type Signature: Clone;
+
+    // Common functionality
+    fn is_orchestrator(&self, sender: &Self::PublicKey) -> bool;
+    fn get_contributor_index(&self, public_key: &Self::PublicKey) -> Option<&usize>;
+}
+
+/// Main contributor trait that extends the base
+pub trait Contribute: ContributorBase {
     type AggregationInput;
 
     fn new(
