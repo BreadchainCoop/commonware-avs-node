@@ -2,8 +2,8 @@
 //!
 //! # Usage (3 of 4 Threshold)
 mod bindings;
+mod contributor;
 mod handlers;
-
 use ark_bn254::Fr;
 use bn254::{Bn254, PrivateKey};
 use clap::{Arg, Command};
@@ -14,6 +14,7 @@ use commonware_runtime::{
     tokio::{self},
 };
 use commonware_utils::NZU32;
+use contributor::{AggregationInput, Contribute};
 use eigen_logging::log_level::LogLevel;
 use governor::Quota;
 use serde::{Deserialize, Serialize};
@@ -68,7 +69,7 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
         .get_one::<String>("port")
         .expect("Please provide port");
     let key = load_key_from_file(key_file);
-    let me = format!("{}@{}", key, port);
+    let me = format!("{key}@{port}");
     let parts = me.split('@').collect::<Vec<&str>>();
     if parts.len() != 2 {
         panic!("Identity not well-formed");
@@ -128,11 +129,19 @@ fn main() {
                 .required(false)
                 .help("Path to orchestrator key file"),
         )
+        .arg(
+            Arg::new("aggregation")
+                .short('a')
+                .required(false)
+                .num_args(0)
+                .help("turn on aggregation"),
+        )
         .get_matches();
 
     // Configure my identity
     let (signer, port) = configure_identity(&matches);
     let orchestrator_config = configure_orchestrator(&matches);
+    let aggregation: bool = matches.contains_id("aggregation");
 
     // Get operator states
 
@@ -222,7 +231,18 @@ fn main() {
         // Create contributor
         let (sender, receiver) =
             network.register(0, Quota::per_second(NZU32!(1)), DEFAULT_MESSAGE_BACKLOG);
-        let contributor = handlers::Contributor::new(orchestrator_pub_key, signer, contributors);
+
+        let mut aggregation_input: Option<AggregationInput> = None;
+        if aggregation {
+            let signatures_needed = contributors.len();
+            aggregation_input = Some(AggregationInput::new(signatures_needed, contributors_map));
+        }
+        let contributor = handlers::Contributor::new(
+            orchestrator_pub_key,
+            signer,
+            contributors,
+            aggregation_input,
+        );
         context.spawn(|_| async move { contributor.run(sender, receiver).await });
 
         let _ = network.start().await;
