@@ -8,6 +8,22 @@ Please see [the following repo](https://github.com/BreadchainCoop/commonware-avs
 cp .example.env .env 
 ```
 
+## Docker Image
+
+Docker images are automatically built and published to GitHub Container Registry with every release.
+
+### Pulling the Docker Image
+
+```bash
+# Pull the latest release
+docker pull ghcr.io/breadchaincoop/commonware-avs-node:latest
+
+# Pull a specific version  
+docker pull ghcr.io/breadchaincoop/commonware-avs-node:v1.2.3
+```
+
+Multi-architecture images are available for both `linux/amd64` and `linux/arm64`.
+
 ## Running Contributors
 ```bash
 source .env
@@ -19,6 +35,14 @@ cargo run --release -- --key-file $CONTRIBUTOR_2_KEYFILE --port 3002 --orchestra
 source .env
 cargo run --release -- --key-file $CONTRIBUTOR_3_KEYFILE --port 3003 --orchestrator orchestrator.json 
 ```
+If you wish to run an aggregating contributor, add the option `--aggregation` argument, for example, if you want the first contributor to be aggregating,
+```bash
+source .env
+cargo run --release -- --key-file $CONTRIBUTOR_1_KEYFILE --port 3001 --orchestrator orchestrator.json --aggregation
+```
+
+You may also use the short command `-a` in place of `--aggregation`.
+
 
 ---
 
