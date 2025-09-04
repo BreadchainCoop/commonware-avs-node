@@ -3085,7 +3085,7 @@ dependencies = [
 [[package]]
 name = "commonware-avs-router"
 version = "0.1.0"
-source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=main#151ea2f5bf3e6b0fd07357114ffac00fa1571bc2"
+source = "git+https://github.com/BreadchainCoop/commonware-avs-router?branch=main#758552a9e55aef700c89f6801fd94cf35c01d427"
 dependencies = [
  "alloy 0.12.6",
  "alloy-primitives",
