@@ -38,7 +38,7 @@ governor = "0.10.1"
 prometheus-client = "0.24.0"
 prost = "0.14.1"
 rand = "0.9.1"
-commonware-eigenlayer = { git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup", branch = "update-dependencies" }
+commonware-eigenlayer = { git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup", branch = "feat/update-dependencies" }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_yaml = "0.9.34"
 tracing = "0.1.41"
