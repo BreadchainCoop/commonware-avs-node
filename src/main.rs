@@ -185,7 +185,7 @@ fn main() {
             let orchestrator_addr = orchestrator_config
                 .address
                 .parse::<IpAddr>()
-                .unwrap_or_else(|_| IpAddr::V4(Ipv4Addr::LOCALHOST));
+                .unwrap_or(IpAddr::V4(Ipv4Addr::LOCALHOST));
             let local_addr = SocketAddr::new(
                 orchestrator_addr,
                 orchestrator_config
