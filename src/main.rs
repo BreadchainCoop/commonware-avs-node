@@ -36,7 +36,13 @@ struct OrchestratorConfig {
     g2_x2: String,
     g2_y1: String,
     g2_y2: String,
+    #[serde(default = "default_address")]
+    address: String,
     port: String,
+}
+
+fn default_address() -> String {
+    "localhost".to_string()
 }
 
 fn get_signer(key: &str) -> Bn254 {
@@ -176,8 +182,12 @@ fn main() {
                 &orchestrator_config.g2_y2,
             )
             .unwrap();
+            let orchestrator_addr = orchestrator_config
+                .address
+                .parse::<IpAddr>()
+                .unwrap_or_else(|_| IpAddr::V4(Ipv4Addr::LOCALHOST));
             let local_addr = SocketAddr::new(
-                IpAddr::V4(Ipv4Addr::LOCALHOST),
+                orchestrator_addr,
                 orchestrator_config
                     .port
                     .parse::<u16>()
