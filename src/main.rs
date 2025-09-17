@@ -84,7 +84,6 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
     let signer = get_signer(key);
 
     let port = parts[1].parse::<u16>().expect("Port not well-formed");
-    tracing::info!(port, "loaded port");
 
     (signer, port)
 }
@@ -168,36 +167,28 @@ fn main() {
             }
             for participant in &participants {
                 let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
-                tracing::info!(key = ?verifier, "registered authorized key",);
                 if let Some(socket) = &participant.socket {
                     // Try to resolve hostname:port to socket addresses
                     match socket.to_socket_addrs() {
                         Ok(mut addrs) => {
                             if let Some(socket_addr) = addrs.next() {
-                                tracing::info!("Resolved participant '{}' to '{}'", socket, socket_addr);
                                 recipients.push((verifier, socket_addr));
                             } else {
-                                tracing::error!("No addresses found for participant '{}'", socket);
                                 panic!("No addresses found for socket: {socket}");
                             }
                         }
-                        Err(e) => {
+                        Err(_) => {
                             // If resolution fails, try parsing as direct IP:PORT
                             match SocketAddr::from_str(socket) {
                                 Ok(socket_addr) => {
-                                    tracing::info!("Using direct participant socket address: {}", socket_addr);
                                     recipients.push((verifier, socket_addr));
                                 }
-                                Err(parse_err) => {
-                                    tracing::error!("Failed to resolve '{}': {:?}, and failed to parse as IP: {:?}", 
-                                                  socket, e, parse_err);
+                                Err(_) => {
                                     panic!("Contributor address not well-formed: {socket}");
                                 }
                             }
                         }
                     }
-                } else {
-                    tracing::warn!("Participant has no socket address configured");
                 }
             }
             orchestrator_pub_key = bn254::PublicKey::create_from_g2_coordinates(
@@ -221,15 +212,8 @@ fn main() {
                     .expect("Port not well-formed"),
             );
 
-            tracing::info!("Orchestrator socket address: {}", local_addr);
-
             recipients.push((orchestrator_pub_key.clone(), local_addr));
         }
-        let subscriber = tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::DEBUG)
-            .with_writer(std::io::stdout)
-            .finish();
-        let _ = tracing::subscriber::set_default(subscriber);
 
         // Configure network
         const MAX_MESSAGE_SIZE: usize = 1024 * 1024; // 1 MB
@@ -245,7 +229,6 @@ fn main() {
         let (mut network, mut oracle) = Network::new(context.with_label("network"), p2p_cfg);
 
         // Provide authorized peers
-        tracing::info!("Registering {} recipients with network oracle", recipients.len());
         oracle.register(0, recipients).await;
 
         // Parse contributors from operator states
@@ -261,7 +244,6 @@ fn main() {
         for operator in operators {
             let verifier = operator.pub_keys.as_ref().unwrap().g2_pub_key.clone();
             let verifier_g1 = operator.pub_keys.as_ref().unwrap().g1_pub_key.clone();
-            tracing::info!(key = ?verifier, "registered contributor",);
             contributors.push(verifier.clone());
             contributors_map.insert(verifier, verifier_g1);
         }
