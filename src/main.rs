@@ -194,7 +194,7 @@ fn main() {
                                 Err(parse_err) => {
                                     tracing::error!("Failed to resolve '{}': {:?}, and failed to parse as IP: {:?}", 
                                                   socket, e, parse_err);
-                                    panic!("contributor address not well-formed: {socket}");
+                                    panic!("Contributor address not well-formed: {socket}");
                                 }
                             }
                         }
