@@ -171,7 +171,7 @@ fn main() {
                 tracing::info!(key = ?verifier, "registered authorized key",);
                 if let Some(socket) = &participant.socket {
                     tracing::debug!("Processing participant socket: '{}'", socket);
-                    
+
                     // Try to resolve hostname:port to socket addresses
                     match socket.to_socket_addrs() {
                         Ok(mut addrs) => {
@@ -210,19 +210,19 @@ fn main() {
                 &orchestrator_config.g2_y2,
             )
             .unwrap();
-            
+
             // Debug: Log orchestrator config
             tracing::debug!("Orchestrator config - address: '{}', port: '{}'", 
                            orchestrator_config.address, orchestrator_config.port);
-            
+
             let orchestrator_addr = orchestrator_config
                 .address
                 .parse::<IpAddr>()
                 .unwrap_or(IpAddr::V4(Ipv4Addr::LOCALHOST));
-            
+
             // Debug: Log parsed address
             tracing::debug!("Parsed orchestrator address: {:?}", orchestrator_addr);
-            
+
             let local_addr = SocketAddr::new(
                 orchestrator_addr,
                 orchestrator_config
@@ -230,10 +230,10 @@ fn main() {
                     .parse::<u16>()
                     .expect("Port not well-formed"),
             );
-            
+
             // Debug: Log final socket address
             tracing::info!("Orchestrator socket address: {}", local_addr);
-            
+
             recipients.push((orchestrator_pub_key.clone(), local_addr));
         }
         let subscriber = tracing_subscriber::fmt()
