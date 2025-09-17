@@ -170,22 +170,25 @@ fn main() {
                 let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
                 tracing::info!(key = ?verifier, "registered authorized key",);
                 if let Some(socket) = &participant.socket {
+                    tracing::debug!("Processing participant socket: '{}'", socket);
+                    
                     // Try to resolve hostname:port to socket addresses
                     match socket.to_socket_addrs() {
                         Ok(mut addrs) => {
                             if let Some(socket_addr) = addrs.next() {
-                                tracing::info!("Resolved '{}' to '{}'", socket, socket_addr);
+                                tracing::info!("Resolved participant '{}' to '{}'", socket, socket_addr);
                                 recipients.push((verifier, socket_addr));
                             } else {
-                                tracing::error!("No addresses found for '{}'", socket);
+                                tracing::error!("No addresses found for participant '{}'", socket);
                                 panic!("No addresses found for socket: {socket}");
                             }
                         }
                         Err(e) => {
+                            tracing::debug!("Hostname resolution failed for '{}': {:?}, trying direct parse", socket, e);
                             // If resolution fails, try parsing as direct IP:PORT
                             match SocketAddr::from_str(socket) {
                                 Ok(socket_addr) => {
-                                    tracing::info!("Using direct socket address: {}", socket_addr);
+                                    tracing::info!("Using direct participant socket address: {}", socket_addr);
                                     recipients.push((verifier, socket_addr));
                                 }
                                 Err(parse_err) => {
@@ -196,6 +199,8 @@ fn main() {
                             }
                         }
                     }
+                } else {
+                    tracing::warn!("Participant has no socket address configured");
                 }
             }
             orchestrator_pub_key = bn254::PublicKey::create_from_g2_coordinates(
@@ -205,10 +210,19 @@ fn main() {
                 &orchestrator_config.g2_y2,
             )
             .unwrap();
+            
+            // Debug: Log orchestrator config
+            tracing::debug!("Orchestrator config - address: '{}', port: '{}'", 
+                           orchestrator_config.address, orchestrator_config.port);
+            
             let orchestrator_addr = orchestrator_config
                 .address
                 .parse::<IpAddr>()
                 .unwrap_or(IpAddr::V4(Ipv4Addr::LOCALHOST));
+            
+            // Debug: Log parsed address
+            tracing::debug!("Parsed orchestrator address: {:?}", orchestrator_addr);
+            
             let local_addr = SocketAddr::new(
                 orchestrator_addr,
                 orchestrator_config
@@ -216,6 +230,10 @@ fn main() {
                     .parse::<u16>()
                     .expect("Port not well-formed"),
             );
+            
+            // Debug: Log final socket address
+            tracing::info!("Orchestrator socket address: {}", local_addr);
+            
             recipients.push((orchestrator_pub_key.clone(), local_addr));
         }
         let subscriber = tracing_subscriber::fmt()
@@ -238,6 +256,10 @@ fn main() {
         let (mut network, mut oracle) = Network::new(context.with_label("network"), p2p_cfg);
 
         // Provide authorized peers
+        tracing::info!("Registering {} recipients with network oracle", recipients.len());
+        for (key, addr) in &recipients {
+            tracing::debug!("Registering recipient - key: {:?}, address: {}", key, addr);
+        }
         oracle.register(0, recipients).await;
 
         // Parse contributors from operator states
