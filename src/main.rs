@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, ToSocketAddrs};
 use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -36,7 +36,13 @@ struct OrchestratorConfig {
     g2_x2: String,
     g2_y1: String,
     g2_y2: String,
+    #[serde(default = "default_address")]
+    address: String,
     port: String,
+}
+
+fn default_address() -> String {
+    "localhost".to_string()
 }
 
 fn get_signer(key: &str) -> Bn254 {
@@ -78,7 +84,6 @@ fn configure_identity(matches: &clap::ArgMatches) -> (Bn254, u16) {
     let signer = get_signer(key);
 
     let port = parts[1].parse::<u16>().expect("Port not well-formed");
-    tracing::info!(port, "loaded port");
 
     (signer, port)
 }
@@ -162,11 +167,28 @@ fn main() {
             }
             for participant in &participants {
                 let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
-                tracing::info!(key = ?verifier, "registered authorized key",);
                 if let Some(socket) = &participant.socket {
-                    let socket_addr =
-                        SocketAddr::from_str(socket).expect("contributor address not well-formed");
-                    recipients.push((verifier, socket_addr));
+                    // Try to resolve hostname:port to socket addresses
+                    match socket.to_socket_addrs() {
+                        Ok(mut addrs) => {
+                            if let Some(socket_addr) = addrs.next() {
+                                recipients.push((verifier, socket_addr));
+                            } else {
+                                panic!("No addresses found for socket: {socket}");
+                            }
+                        }
+                        Err(_) => {
+                            // If resolution fails, try parsing as direct IP:PORT
+                            match SocketAddr::from_str(socket) {
+                                Ok(socket_addr) => {
+                                    recipients.push((verifier, socket_addr));
+                                }
+                                Err(_) => {
+                                    panic!("Contributor address not well-formed: {socket}");
+                                }
+                            }
+                        }
+                    }
                 }
             }
             orchestrator_pub_key = bn254::PublicKey::create_from_g2_coordinates(
@@ -176,20 +198,22 @@ fn main() {
                 &orchestrator_config.g2_y2,
             )
             .unwrap();
+
+            let orchestrator_addr = orchestrator_config
+                .address
+                .parse::<IpAddr>()
+                .unwrap_or(IpAddr::V4(Ipv4Addr::LOCALHOST));
+
             let local_addr = SocketAddr::new(
-                IpAddr::V4(Ipv4Addr::LOCALHOST),
+                orchestrator_addr,
                 orchestrator_config
                     .port
                     .parse::<u16>()
                     .expect("Port not well-formed"),
             );
+
             recipients.push((orchestrator_pub_key.clone(), local_addr));
         }
-        let subscriber = tracing_subscriber::fmt()
-            .with_max_level(tracing::Level::DEBUG)
-            .with_writer(std::io::stdout)
-            .finish();
-        let _ = tracing::subscriber::set_default(subscriber);
 
         // Configure network
         const MAX_MESSAGE_SIZE: usize = 1024 * 1024; // 1 MB
@@ -220,7 +244,6 @@ fn main() {
         for operator in operators {
             let verifier = operator.pub_keys.as_ref().unwrap().g2_pub_key.clone();
             let verifier_g1 = operator.pub_keys.as_ref().unwrap().g1_pub_key.clone();
-            tracing::info!(key = ?verifier, "registered contributor",);
             contributors.push(verifier.clone());
             contributors_map.insert(verifier, verifier_g1);
         }
