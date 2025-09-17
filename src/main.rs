@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
 use std::fs;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, ToSocketAddrs};
 use std::str::FromStr;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -170,9 +170,32 @@ fn main() {
                 let verifier = participant.pub_keys.as_ref().unwrap().g2_pub_key.clone();
                 tracing::info!(key = ?verifier, "registered authorized key",);
                 if let Some(socket) = &participant.socket {
-                    let socket_addr =
-                        SocketAddr::from_str(socket).expect("contributor address not well-formed");
-                    recipients.push((verifier, socket_addr));
+                    // Try to resolve hostname:port to socket addresses
+                    match socket.to_socket_addrs() {
+                        Ok(mut addrs) => {
+                            if let Some(socket_addr) = addrs.next() {
+                                tracing::info!("Resolved '{}' to '{}'", socket, socket_addr);
+                                recipients.push((verifier, socket_addr));
+                            } else {
+                                tracing::error!("No addresses found for '{}'", socket);
+                                panic!("No addresses found for socket: {socket}");
+                            }
+                        }
+                        Err(e) => {
+                            // If resolution fails, try parsing as direct IP:PORT
+                            match SocketAddr::from_str(socket) {
+                                Ok(socket_addr) => {
+                                    tracing::info!("Using direct socket address: {}", socket_addr);
+                                    recipients.push((verifier, socket_addr));
+                                }
+                                Err(parse_err) => {
+                                    tracing::error!("Failed to resolve '{}': {:?}, and failed to parse as IP: {:?}", 
+                                                  socket, e, parse_err);
+                                    panic!("contributor address not well-formed: {socket}");
+                                }
+                            }
+                        }
+                    }
                 }
             }
             orchestrator_pub_key = bn254::PublicKey::create_from_g2_coordinates(
