@@ -24,6 +24,28 @@ docker pull ghcr.io/breadchaincoop/commonware-avs-node:v1.2.3
 
 Multi-architecture images are available for both `linux/amd64` and `linux/arm64`.
 
+## Orchestrator Configuration
+
+The orchestrator configuration file (`orchestrator.json`) specifies the connection details for the orchestrator node. The file includes:
+
+- `g2_x1`, `g2_x2`, `g2_y1`, `g2_y2`: Public key coordinates for the orchestrator
+- `address`: IP address or hostname of the orchestrator (optional, defaults to "localhost" for backwards compatibility)
+- `port`: Port number for the orchestrator
+
+Example `orchestrator.json`:
+```json
+{
+    "g2_x1": "20265730220917057623326116620721648047640065506233168445998945605458084341755",
+    "g2_x2": "1537141129484558011683382469842956131676085503509229854572844956364492197092",
+    "g2_y1": "4380068110839997539835821427545270098552639074995346826656804866303457881635",
+    "g2_y2": "479676018937294309080674601592141614301396550682703157902264620243097107417",
+    "address": "192.168.1.100",
+    "port": "3000"
+}
+```
+
+For backwards compatibility, if the `address` field is omitted, it will default to "localhost".
+
 ## Running Contributors
 ```bash
 source .env

@@ -449,7 +449,6 @@ pub mod BN254 {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -500,7 +499,6 @@ pub mod BN254 {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -519,7 +517,6 @@ pub mod BN254 {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1173,7 +1170,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1224,7 +1220,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1243,7 +1238,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -3558,7 +3552,7 @@ pub mod BLSSignatureChecker {
         #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
     }
-    #[automatically_derived]
+
     impl BLSSignatureCheckerCalls {
         /// All the selectors of this enum.
         ///
@@ -3798,7 +3792,7 @@ pub mod BLSSignatureChecker {
         #[allow(missing_docs)]
         ScalarTooLarge(ScalarTooLarge),
     }
-    #[automatically_derived]
+
     impl BLSSignatureCheckerErrors {
         /// All the selectors of this enum.
         ///
@@ -4294,7 +4288,6 @@ pub mod BLSSignatureChecker {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -4381,7 +4374,6 @@ pub mod BLSSignatureChecker {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -4450,7 +4442,6 @@ pub mod BLSSignatureChecker {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
