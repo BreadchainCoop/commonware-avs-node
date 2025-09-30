@@ -12,7 +12,9 @@ library BN254 {
     non_snake_case,
     clippy::pub_underscore_fields,
     clippy::style,
-    clippy::empty_structs_with_brackets
+    clippy::empty_structs_with_brackets,
+    clippy::identity_op,
+    clippy::type_complexity
 )]
 pub mod BN254 {
 
@@ -56,14 +58,12 @@ pub mod BN254 {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<G1Point> for UnderlyingRustTuple<'_> {
             fn from(value: G1Point) -> Self {
                 (value.X, value.Y)
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for G1Point {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -73,11 +73,9 @@ pub mod BN254 {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for G1Point {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for G1Point {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -123,7 +121,6 @@ pub mod BN254 {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for G1Point {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -142,7 +139,6 @@ pub mod BN254 {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for G1Point {
             const NAME: &'static str = "G1Point";
             #[inline]
@@ -174,7 +170,6 @@ pub mod BN254 {
                     .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for G1Point {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -245,14 +240,12 @@ pub mod BN254 {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<G2Point> for UnderlyingRustTuple<'_> {
             fn from(value: G2Point) -> Self {
                 (value.X, value.Y)
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for G2Point {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -262,11 +255,9 @@ pub mod BN254 {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for G2Point {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for G2Point {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -314,7 +305,6 @@ pub mod BN254 {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for G2Point {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -333,7 +323,6 @@ pub mod BN254 {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for G2Point {
             const NAME: &'static str = "G2Point";
             #[inline]
@@ -367,7 +356,6 @@ pub mod BN254 {
                 .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for G2Point {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -441,7 +429,6 @@ pub mod BN254 {
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
-    #[automatically_derived]
     impl<T, P, N> ::core::fmt::Debug for BN254Instance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -449,7 +436,6 @@ pub mod BN254 {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -500,7 +486,6 @@ pub mod BN254 {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -519,7 +504,6 @@ pub mod BN254 {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -624,7 +608,6 @@ pub mod IBLSSignatureCheckerTypes {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<NonSignerStakesAndSignature> for UnderlyingRustTuple<'_> {
             fn from(value: NonSignerStakesAndSignature) -> Self {
@@ -640,7 +623,6 @@ pub mod IBLSSignatureCheckerTypes {
                 )
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for NonSignerStakesAndSignature {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -656,11 +638,9 @@ pub mod IBLSSignatureCheckerTypes {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for NonSignerStakesAndSignature {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for NonSignerStakesAndSignature {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -724,7 +704,6 @@ pub mod IBLSSignatureCheckerTypes {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for NonSignerStakesAndSignature {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -743,7 +722,6 @@ pub mod IBLSSignatureCheckerTypes {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for NonSignerStakesAndSignature {
             const NAME: &'static str = "NonSignerStakesAndSignature";
             #[inline]
@@ -822,7 +800,6 @@ pub mod IBLSSignatureCheckerTypes {
                     .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for NonSignerStakesAndSignature {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -965,14 +942,12 @@ pub mod IBLSSignatureCheckerTypes {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<QuorumStakeTotals> for UnderlyingRustTuple<'_> {
             fn from(value: QuorumStakeTotals) -> Self {
                 (value.signedStakeForQuorum, value.totalStakeForQuorum)
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumStakeTotals {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -982,11 +957,9 @@ pub mod IBLSSignatureCheckerTypes {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for QuorumStakeTotals {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for QuorumStakeTotals {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -1032,7 +1005,6 @@ pub mod IBLSSignatureCheckerTypes {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for QuorumStakeTotals {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -1051,7 +1023,6 @@ pub mod IBLSSignatureCheckerTypes {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for QuorumStakeTotals {
             const NAME: &'static str = "QuorumStakeTotals";
             #[inline]
@@ -1089,7 +1060,6 @@ pub mod IBLSSignatureCheckerTypes {
                     .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for QuorumStakeTotals {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -1163,7 +1133,6 @@ pub mod IBLSSignatureCheckerTypes {
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
-    #[automatically_derived]
     impl<T, P, N> ::core::fmt::Debug for IBLSSignatureCheckerTypesInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -1173,7 +1142,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1224,7 +1192,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1243,7 +1210,6 @@ pub mod IBLSSignatureCheckerTypes {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1330,7 +1296,6 @@ pub mod OperatorStateRetriever {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<CheckSignaturesIndices> for UnderlyingRustTuple<'_> {
             fn from(value: CheckSignaturesIndices) -> Self {
@@ -1342,7 +1307,6 @@ pub mod OperatorStateRetriever {
                 )
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for CheckSignaturesIndices {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -1354,11 +1318,9 @@ pub mod OperatorStateRetriever {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for CheckSignaturesIndices {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for CheckSignaturesIndices {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -1414,7 +1376,6 @@ pub mod OperatorStateRetriever {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for CheckSignaturesIndices {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -1433,7 +1394,6 @@ pub mod OperatorStateRetriever {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for CheckSignaturesIndices {
             const NAME: &'static str = "CheckSignaturesIndices";
             #[inline]
@@ -1485,7 +1445,6 @@ pub mod OperatorStateRetriever {
                     .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for CheckSignaturesIndices {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -1594,14 +1553,12 @@ pub mod OperatorStateRetriever {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<Operator> for UnderlyingRustTuple<'_> {
             fn from(value: Operator) -> Self {
                 (value.operator, value.operatorId, value.stake)
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for Operator {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -1612,11 +1569,9 @@ pub mod OperatorStateRetriever {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolValue for Operator {
             type SolType = Self;
         }
-        #[automatically_derived]
         impl alloy_sol_types::private::SolTypeValue<Self> for Operator {
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
@@ -1665,7 +1620,6 @@ pub mod OperatorStateRetriever {
                 )
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolType for Operator {
             type RustType = Self;
             type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -1684,7 +1638,6 @@ pub mod OperatorStateRetriever {
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolStruct for Operator {
             const NAME: &'static str = "Operator";
             #[inline]
@@ -1722,7 +1675,6 @@ pub mod OperatorStateRetriever {
                     .concat()
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::EventTopic for Operator {
             #[inline]
             fn topic_preimage_length(rust: &Self::RustType) -> usize {
@@ -1801,7 +1753,6 @@ pub mod OperatorStateRetriever {
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
-    #[automatically_derived]
     impl<T, P, N> ::core::fmt::Debug for OperatorStateRetrieverInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -1811,7 +1762,6 @@ pub mod OperatorStateRetriever {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1862,7 +1812,6 @@ pub mod OperatorStateRetriever {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -1881,7 +1830,6 @@ pub mod OperatorStateRetriever {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -2966,21 +2914,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<BitmapValueTooLarge> for UnderlyingRustTuple<'_> {
-            fn from(value: BitmapValueTooLarge) -> Self {
+            fn from(_value: BitmapValueTooLarge) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for BitmapValueTooLarge {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for BitmapValueTooLarge {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3027,21 +2972,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<BytesArrayLengthTooLong> for UnderlyingRustTuple<'_> {
-            fn from(value: BytesArrayLengthTooLong) -> Self {
+            fn from(_value: BytesArrayLengthTooLong) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for BytesArrayLengthTooLong {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for BytesArrayLengthTooLong {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3088,21 +3030,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<BytesArrayNotOrdered> for UnderlyingRustTuple<'_> {
-            fn from(value: BytesArrayNotOrdered) -> Self {
+            fn from(_value: BytesArrayNotOrdered) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for BytesArrayNotOrdered {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for BytesArrayNotOrdered {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3149,21 +3088,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<ECAddFailed> for UnderlyingRustTuple<'_> {
-            fn from(value: ECAddFailed) -> Self {
+            fn from(_value: ECAddFailed) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for ECAddFailed {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for ECAddFailed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3210,21 +3146,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<ECMulFailed> for UnderlyingRustTuple<'_> {
-            fn from(value: ECMulFailed) -> Self {
+            fn from(_value: ECMulFailed) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for ECMulFailed {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for ECMulFailed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3271,21 +3204,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<ExpModFailed> for UnderlyingRustTuple<'_> {
-            fn from(value: ExpModFailed) -> Self {
+            fn from(_value: ExpModFailed) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for ExpModFailed {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for ExpModFailed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3332,21 +3262,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<FutureBlockNumber> for UnderlyingRustTuple<'_> {
-            fn from(value: FutureBlockNumber) -> Self {
+            fn from(_value: FutureBlockNumber) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for FutureBlockNumber {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for FutureBlockNumber {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3393,21 +3320,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
-            fn from(value: InputArrayLengthMismatch) -> Self {
+            fn from(_value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3454,21 +3378,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InputEmptyQuorumNumbers> for UnderlyingRustTuple<'_> {
-            fn from(value: InputEmptyQuorumNumbers) -> Self {
+            fn from(_value: InputEmptyQuorumNumbers) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputEmptyQuorumNumbers {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InputEmptyQuorumNumbers {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3515,21 +3436,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InputNonSignerLengthMismatch> for UnderlyingRustTuple<'_> {
-            fn from(value: InputNonSignerLengthMismatch) -> Self {
+            fn from(_value: InputNonSignerLengthMismatch) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputNonSignerLengthMismatch {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InputNonSignerLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3576,21 +3494,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InsufficientQuorumThreshold> for UnderlyingRustTuple<'_> {
-            fn from(value: InsufficientQuorumThreshold) -> Self {
+            fn from(_value: InsufficientQuorumThreshold) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InsufficientQuorumThreshold {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InsufficientQuorumThreshold {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3637,21 +3552,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidBLSPairingKey> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidBLSPairingKey) -> Self {
+            fn from(_value: InvalidBLSPairingKey) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidBLSPairingKey {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidBLSPairingKey {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3698,21 +3610,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidBLSSignature> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidBLSSignature) -> Self {
+            fn from(_value: InvalidBLSSignature) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidBLSSignature {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidBLSSignature {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3759,21 +3668,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidHash> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidHash) -> Self {
+            fn from(_value: InvalidHash) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidHash {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidHash {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3820,21 +3726,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidQuorumApkHash> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidQuorumApkHash) -> Self {
+            fn from(_value: InvalidQuorumApkHash) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidQuorumApkHash {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidQuorumApkHash {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3881,21 +3784,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidReferenceBlocknumber> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidReferenceBlocknumber) -> Self {
+            fn from(_value: InvalidReferenceBlocknumber) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidReferenceBlocknumber {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidReferenceBlocknumber {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -3942,21 +3842,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<InvalidSigma> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidSigma) -> Self {
+            fn from(_value: InvalidSigma) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidSigma {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidSigma {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4003,21 +3900,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<NonSignerPubkeysNotSorted> for UnderlyingRustTuple<'_> {
-            fn from(value: NonSignerPubkeysNotSorted) -> Self {
+            fn from(_value: NonSignerPubkeysNotSorted) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for NonSignerPubkeysNotSorted {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for NonSignerPubkeysNotSorted {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4064,21 +3958,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<OnlyRegistryCoordinatorOwner> for UnderlyingRustTuple<'_> {
-            fn from(value: OnlyRegistryCoordinatorOwner) -> Self {
+            fn from(_value: OnlyRegistryCoordinatorOwner) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyRegistryCoordinatorOwner {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyRegistryCoordinatorOwner {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4125,21 +4016,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<OperatorNotRegistered> for UnderlyingRustTuple<'_> {
-            fn from(value: OperatorNotRegistered) -> Self {
+            fn from(_value: OperatorNotRegistered) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorNotRegistered {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorNotRegistered {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4186,21 +4074,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<ScalarTooLarge> for UnderlyingRustTuple<'_> {
-            fn from(value: ScalarTooLarge) -> Self {
+            fn from(_value: ScalarTooLarge) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for ScalarTooLarge {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for ScalarTooLarge {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4247,21 +4132,18 @@ pub mod Counter {
                 >(_) => {}
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<StaleBlockNumber> for UnderlyingRustTuple<'_> {
-            fn from(value: StaleBlockNumber) -> Self {
+            fn from(_value: StaleBlockNumber) -> Self {
                 ()
             }
         }
-        #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>> for StaleBlockNumber {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+            fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolError for StaleBlockNumber {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4305,14 +4187,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<constructorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: constructorCall) -> Self {
                     (value._registryCoordinator,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for constructorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4322,7 +4202,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolConstructor for constructorCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4380,17 +4259,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<BLOCK_STALE_MEASURECall> for UnderlyingRustTuple<'_> {
-                fn from(value: BLOCK_STALE_MEASURECall) -> Self {
+                fn from(_value: BLOCK_STALE_MEASURECall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for BLOCK_STALE_MEASURECall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -4409,14 +4286,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<BLOCK_STALE_MEASUREReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: BLOCK_STALE_MEASUREReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for BLOCK_STALE_MEASUREReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4424,7 +4299,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for BLOCK_STALE_MEASURECall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4493,17 +4367,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<QUORUM_THRESHOLDCall> for UnderlyingRustTuple<'_> {
-                fn from(value: QUORUM_THRESHOLDCall) -> Self {
+                fn from(_value: QUORUM_THRESHOLDCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for QUORUM_THRESHOLDCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -4522,14 +4394,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<QUORUM_THRESHOLDReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: QUORUM_THRESHOLDReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for QUORUM_THRESHOLDReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4537,7 +4407,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for QUORUM_THRESHOLDCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4606,17 +4475,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<THRESHOLD_DENOMINATORCall> for UnderlyingRustTuple<'_> {
-                fn from(value: THRESHOLD_DENOMINATORCall) -> Self {
+                fn from(_value: THRESHOLD_DENOMINATORCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for THRESHOLD_DENOMINATORCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -4635,14 +4502,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<THRESHOLD_DENOMINATORReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: THRESHOLD_DENOMINATORReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for THRESHOLD_DENOMINATORReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4650,7 +4515,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for THRESHOLD_DENOMINATORCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4719,17 +4583,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<blsApkRegistryCall> for UnderlyingRustTuple<'_> {
-                fn from(value: blsApkRegistryCall) -> Self {
+                fn from(_value: blsApkRegistryCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for blsApkRegistryCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -4748,14 +4610,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<blsApkRegistryReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: blsApkRegistryReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for blsApkRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4763,7 +4623,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for blsApkRegistryCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -4854,7 +4713,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<checkSignaturesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: checkSignaturesCall) -> Self {
@@ -4866,7 +4724,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for checkSignaturesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4899,14 +4756,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<checkSignaturesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: checkSignaturesReturn) -> Self {
                     (value._0, value._1)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for checkSignaturesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -4917,7 +4772,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for checkSignaturesCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::FixedBytes<32>,
@@ -5007,17 +4861,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<delegationCall> for UnderlyingRustTuple<'_> {
-                fn from(value: delegationCall) -> Self {
+                fn from(_value: delegationCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for delegationCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -5036,14 +4888,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<delegationReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: delegationReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for delegationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5051,7 +4901,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for delegationCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -5131,14 +4980,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getBatchOperatorFromIdCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getBatchOperatorFromIdCall) -> Self {
                     (value.registryCoordinator, value.operatorIds)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getBatchOperatorFromIdCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5165,14 +5012,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getBatchOperatorFromIdReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getBatchOperatorFromIdReturn) -> Self {
                     (value.operators,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getBatchOperatorFromIdReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5180,7 +5025,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getBatchOperatorFromIdCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -5271,14 +5115,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getBatchOperatorIdCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getBatchOperatorIdCall) -> Self {
                     (value.registryCoordinator, value.operators)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getBatchOperatorIdCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5305,14 +5147,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getBatchOperatorIdReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getBatchOperatorIdReturn) -> Self {
                     (value.operatorIds,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getBatchOperatorIdReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5322,7 +5162,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getBatchOperatorIdCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -5423,7 +5262,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getCheckSignaturesIndicesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getCheckSignaturesIndicesCall) -> Self {
@@ -5435,7 +5273,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getCheckSignaturesIndicesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5464,14 +5301,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getCheckSignaturesIndicesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getCheckSignaturesIndicesReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getCheckSignaturesIndicesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5479,7 +5314,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getCheckSignaturesIndicesCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -5590,7 +5424,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getNonSignerStakesAndSignatureCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getNonSignerStakesAndSignatureCall) -> Self {
@@ -5603,7 +5436,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getNonSignerStakesAndSignatureCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5633,14 +5465,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getNonSignerStakesAndSignatureReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getNonSignerStakesAndSignatureReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getNonSignerStakesAndSignatureReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5648,7 +5478,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getNonSignerStakesAndSignatureCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -5757,7 +5586,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getOperatorState_0Call> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorState_0Call) -> Self {
@@ -5768,7 +5596,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorState_0Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5804,14 +5631,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getOperatorState_0Return> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorState_0Return) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorState_0Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5819,7 +5644,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getOperatorState_0Call {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -5927,7 +5751,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getOperatorState_1Call> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorState_1Call) -> Self {
@@ -5938,7 +5761,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorState_1Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5976,14 +5798,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getOperatorState_1Return> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorState_1Return) -> Self {
                     (value._0, value._1)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorState_1Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -5994,7 +5814,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getOperatorState_1Call {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -6098,7 +5917,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getQuorumBitmapsAtBlockNumberCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getQuorumBitmapsAtBlockNumberCall) -> Self {
@@ -6109,7 +5927,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getQuorumBitmapsAtBlockNumberCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6140,14 +5957,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<getQuorumBitmapsAtBlockNumberReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getQuorumBitmapsAtBlockNumberReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getQuorumBitmapsAtBlockNumberReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6155,7 +5970,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for getQuorumBitmapsAtBlockNumberCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
@@ -6255,7 +6069,6 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<incrementCall> for UnderlyingRustTuple<'_> {
                 fn from(value: incrementCall) -> Self {
@@ -6267,7 +6080,6 @@ pub mod Counter {
                     )
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for incrementCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6294,22 +6106,19 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<incrementReturn> for UnderlyingRustTuple<'_> {
-                fn from(value: incrementReturn) -> Self {
+                fn from(_value: incrementReturn) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for incrementReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for incrementCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::FixedBytes<32>,
@@ -6396,17 +6205,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<numberCall> for UnderlyingRustTuple<'_> {
-                fn from(value: numberCall) -> Self {
+                fn from(_value: numberCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for numberCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -6425,14 +6232,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<numberReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: numberReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for numberReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6440,7 +6245,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for numberCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -6509,17 +6313,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<registryCoordinatorCall> for UnderlyingRustTuple<'_> {
-                fn from(value: registryCoordinatorCall) -> Self {
+                fn from(_value: registryCoordinatorCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -6538,14 +6340,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<registryCoordinatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6553,7 +6353,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for registryCoordinatorCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -6622,17 +6421,15 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<stakeRegistryCall> for UnderlyingRustTuple<'_> {
-                fn from(value: stakeRegistryCall) -> Self {
+                fn from(_value: stakeRegistryCall) -> Self {
                     ()
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeRegistryCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                fn from(_tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
@@ -6651,14 +6448,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<stakeRegistryReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: stakeRegistryReturn) -> Self {
                     (value._0,)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6666,7 +6461,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for stakeRegistryCall {
             type Parameters<'a> = ();
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
@@ -6756,14 +6550,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<trySignatureAndApkVerificationCall> for UnderlyingRustTuple<'_> {
                 fn from(value: trySignatureAndApkVerificationCall) -> Self {
                     (value.msgHash, value.apk, value.apkG2, value.sigma)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for trySignatureAndApkVerificationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6793,14 +6585,12 @@ pub mod Counter {
                     >(_) => {}
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<trySignatureAndApkVerificationReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: trySignatureAndApkVerificationReturn) -> Self {
                     (value.pairingSuccessful, value.siganatureIsValid)
                 }
             }
-            #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for trySignatureAndApkVerificationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
@@ -6811,7 +6601,6 @@ pub mod Counter {
                 }
             }
         }
-        #[automatically_derived]
         impl alloy_sol_types::SolCall for trySignatureAndApkVerificationCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::FixedBytes<32>,
@@ -6897,7 +6686,6 @@ pub mod Counter {
         #[allow(missing_docs)]
         trySignatureAndApkVerification(trySignatureAndApkVerificationCall),
     }
-    #[automatically_derived]
     impl CounterCalls {
         /// All the selectors of this enum.
         ///
@@ -6926,7 +6714,6 @@ pub mod Counter {
             [239u8, 2u8, 68u8, 88u8],
         ];
     }
-    #[automatically_derived]
     impl alloy_sol_types::SolInterface for CounterCalls {
         const NAME: &'static str = "CounterCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
@@ -6997,7 +6784,8 @@ pub mod Counter {
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<CounterCalls>] = &[
+            type DecodeShim<T> = fn(&[u8], bool) -> alloy_sol_types::Result<T>;
+            static DECODE_SHIMS: &[DecodeShim<CounterCalls>] = &[
                 {
                     fn trySignatureAndApkVerification(
                         data: &[u8],
@@ -7433,7 +7221,6 @@ pub mod Counter {
         #[allow(missing_docs)]
         StaleBlockNumber(StaleBlockNumber),
     }
-    #[automatically_derived]
     impl CounterErrors {
         /// All the selectors of this enum.
         ///
@@ -7466,7 +7253,6 @@ pub mod Counter {
             [255u8, 137u8, 212u8, 250u8],
         ];
     }
-    #[automatically_derived]
     impl alloy_sol_types::SolInterface for CounterErrors {
         const NAME: &'static str = "CounterErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
@@ -7545,7 +7331,8 @@ pub mod Counter {
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<CounterErrors>] = &[
+            type DecodeShim<T> = fn(&[u8], bool) -> alloy_sol_types::Result<T>;
+            static DECODE_SHIMS: &[DecodeShim<CounterErrors>] = &[
                 {
                     fn InvalidHash(
                         data: &[u8],
@@ -8010,7 +7797,6 @@ pub mod Counter {
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
-    #[automatically_derived]
     impl<T, P, N> ::core::fmt::Debug for CounterInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
@@ -8020,7 +7806,6 @@ pub mod Counter {
         }
     }
     /// Instantiation and getters/setters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -8071,7 +7856,6 @@ pub mod Counter {
         }
     }
     /// Function calls.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
@@ -8272,7 +8056,6 @@ pub mod Counter {
         }
     }
     /// Event filters.
-    #[automatically_derived]
     impl<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,

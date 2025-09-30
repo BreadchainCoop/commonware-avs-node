@@ -1,11 +1,19 @@
-/target/
+# macOS system file
+.DS_Store
+
+# Environment files
+.env
+/.env
+/orchestrator/.env
+/contributor/.env
+
+# Build artifacts
+/target
 /eigenlayer/target
 /orchestrator/target
 /contributor/target
-/.env
+
+# Key files
 keys/
 /orchestrator/keys
 /contributor/keys
-/orchestrator/.env
-/contributor/.env
-.env
