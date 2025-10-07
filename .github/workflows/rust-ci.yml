@@ -70,12 +70,6 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Generate coverage report
-        run: cargo tarpaulin --all-features --workspace --out xml --output-dir ./coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage/cobertura.xml
-          fail_ci_if_error: false
+        run: cargo tarpaulin --all-features --workspace
 
 
