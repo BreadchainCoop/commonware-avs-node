@@ -146,3 +146,7 @@ autonumber
   - `cargo fmt --all -- --check`
   - `cargo clippy --all-targets --all-features -- -D warnings`
 - CI runs these checks on PRs; make sure they pass locally to avoid failures.
+
+## Licensing
+
+This repository is dual-licensed under both the [Apache 2.0](https://github.com/BreadchainCoop/commonware-avs-node/blob/main/LICENSE-APACHE) and [MIT](https://github.com/BreadchainCoop/commonware-avs-node/blob/main/LICENSE-MIT) licenses. You may choose either license when employing this code.
