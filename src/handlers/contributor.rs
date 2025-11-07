@@ -1,25 +1,24 @@
 use anyhow::Result;
-use bn254::{self, Bn254, PublicKey, Signature as Bn254Signature};
 use bytes::Bytes;
-use commonware_avs_router::validator::Validator;
 use commonware_codec::{EncodeSize, ReadExt, Write};
 use commonware_cryptography::Signer;
 use commonware_p2p::{Receiver, Sender};
 use commonware_utils::hex;
 use dotenv::dotenv;
+use jito_bls_ncn_core::bls::solana_bls_interface::{SolanaBN254G2, SolanaBN254Keypair, SolanaBN254Signature};
 use std::collections::{HashMap, HashSet};
 use tracing::info;
 
-use commonware_avs_router::wire::{self, aggregation::Payload};
+use commonware_avs_router::{validator::Validator, wire::{self, aggregation::Payload}};
 
 pub struct Contributor {
-    orchestrator: PublicKey,
-    signer: Bn254,
+    orchestrator: SolanaBN254G2,
+    signer: SolanaBN254Keypair,
     me: usize,
 }
 
 impl Contributor {
-    pub fn new(orchestrator: PublicKey, signer: Bn254, mut contributors: Vec<PublicKey>) -> Self {
+    pub fn new(orchestrator: SolanaBN254G2, signer: SolanaBN254Keypair, mut contributors: Vec<SolanaBN254G2>) -> Self {
         dotenv().ok();
         contributors.sort();
         let mut ordered_contributors = HashMap::new();
@@ -37,10 +36,10 @@ impl Contributor {
     pub async fn run(
         self,
         mut sender: impl Sender,
-        mut receiver: impl Receiver<PublicKey = PublicKey>,
+        mut receiver: impl Receiver<PublicKey = SolanaBN254G2>,
     ) -> Result<()> {
         let mut signed = HashSet::new();
-        let mut signatures: HashMap<u64, HashMap<usize, Bn254Signature>> = HashMap::new();
+        let mut signatures: HashMap<u64, HashMap<usize, SolanaBN254Signature>> = HashMap::new();
         let validator = Validator::new().await?;
 
         while let Ok((s, message)) = receiver.recv().await {
@@ -73,7 +72,9 @@ impl Contributor {
                 round,
                 hex(&payload)
             );
-            let signature = self.signer.sign(None, &payload);
+
+            // Sign the raw message directly
+            let signature = self.signer.solana_sign(&payload, round);
 
             // Store signature
             signatures
