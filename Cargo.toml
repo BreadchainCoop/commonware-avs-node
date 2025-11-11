@@ -6,39 +6,39 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-commonware-avs-router = { git = "https://github.com/BreadchainCoop/commonware-avs-router", branch = "main" }
+commonware-avs-router = { git = "https://github.com/BreadchainCoop/commonware-avs-router", branch = "feat/update-dependencies" }
 
-alloy = { version = "0.12.6" }
-alloy-network = "0.5.4"
-alloy-primitives = "0.8.25"
-alloy-signer = "0.12.6"
-alloy-signer-local = "0.12.6"
-alloy-provider = "0.12.6"
+alloy = { version = "1.0.30" }
+alloy-network = "1.0.30"
+alloy-primitives = "1.4.1"
+alloy-signer = "1.0.30"
+alloy-signer-local = "1.0.30"
+alloy-provider = "1.0.30"
 anyhow = "1.0"
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
 ark-ff = "0.5.0"
 ark-serialize = "0.5.0"
-bn254 = { git = "https://github.com/BreadchainCoop/bn254.git" }
+bn254 = { git = "https://github.com/BreadchainCoop/bn254.git", branch = "feat/update-dependencies" }
 bytes = "1.10.1"
 clap = "4.5.37"
-commonware-codec = "0.0.56"
-commonware-cryptography = "0.0.56"
-commonware-macros = "0.0.56"
-commonware-p2p = "0.0.56"
-commonware-runtime = "0.0.56"
-commonware-utils = "0.0.56"
+commonware-codec = "0.0.62"
+commonware-cryptography = "0.0.62"
+commonware-macros = "0.0.62"
+commonware-p2p = "0.0.62"
+commonware-runtime = "0.0.62"
+commonware-utils = "0.0.62"
 dotenv = "0.15.0"
-eigen-crypto-bls = "0.5.0"
-eigen-crypto-bn254 = "0.5.0"
-eigen-logging = "0.1.3"
+eigen-crypto-bls = "2.0.0"
+eigen-crypto-bn254 = "2.0.0"
+eigen-logging = "1.0.0"
 futures = "0.3.31"
 futures-util = "0.3.31"
 governor = "0.6.3"
 prometheus-client = "0.23.1"
 prost = "0.13.5"
 rand = "0.9.1"
-commonware-eigenlayer = { git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup" }
+commonware-eigenlayer = { git = "https://github.com/BreadchainCoop/commonware-avs-network-lookup", branch = "feat/update-dependencies" }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_yaml = "0.9.34"
 tracing = "0.1.41"
